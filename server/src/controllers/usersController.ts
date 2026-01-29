@@ -22,7 +22,6 @@ export const getUserById: RequestHandler =async(req,res)=>{
 
 //post register user
 
-
 export const registerUser:RequestHandler= async(req, res)=>{
   const user =await Users.create(req.body);
   if (!user){
