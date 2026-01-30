@@ -11,7 +11,7 @@ const Footer = () => {
           <NavLink to={'/about'}>About</NavLink>
         </div>
         <div className="link link-hover">
-          <NavLink to={'/auth'}>User area</NavLink>
+          <NavLink to={'/user'}>User area</NavLink>
         </div>
       </nav>
       <nav>
