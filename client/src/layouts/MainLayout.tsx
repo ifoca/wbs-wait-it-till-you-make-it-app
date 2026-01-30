@@ -13,7 +13,7 @@ const MainLayout = () => {
         <Outlet />
       </div>
       <div
-        className="hero"
+        className="hero min-h-screen"
         style={{
           backgroundImage: 'url(https://images.pexels.com/photos/196655/pexels-photo-196655.jpeg)',
         }}
