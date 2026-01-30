@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import Footer from './components/Footer';
 import MainLayout from './layouts/MainLayout';
 import UserLayout from './layouts/UserLayout';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
       {/* <GeneralState> TO DO: add general state management */}
       {/* <AuthState> TO DO: add auth state management */}
       <div data-theme="aqua" className="flex flex-col min-h-screen">
-        {/* <Navbar /> TO DO: add navbar component */}
+        <Navbar />
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<div>Menu</div>} /> {/* TO DO: add Menu component */}
