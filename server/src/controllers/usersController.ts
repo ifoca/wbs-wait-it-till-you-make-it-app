@@ -34,10 +34,12 @@ export const registerUser:RequestHandler= async(req, res)=>{
 //post login user
 
 export const loginUser:RequestHandler = async(req,res)=>{
-  const {email, password}=req.body;
-  const user =await Users.findOne({email, password});
+  const {email, password} = req.body;
+  const user = await Users.findOne({email, password});
   if (!user || user.password !== password){
-    throw new Error( 'invalid email or password',{cause:401});
+    //throw new Error( 'invalid email or password',{cause:401});
+    return res.status(401).json({message: 'invalid email or password'});
+  
     // we all need to handle token here 
   }
   return res.status(200).json({message:'login successfully'});

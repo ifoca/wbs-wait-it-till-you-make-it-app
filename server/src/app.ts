@@ -12,9 +12,9 @@ app.use(express.json());
 
 //for Users/Authentication
 app.use('/auth/user', usersRouter);
-// for cities and station search
+//for cities and station search
 app.use('/locations',locationsRouter);
-// for users to manage their favorite stations
+//for users to manage their favorite stations
 app.use('/favorites',favoriteRouter);
 
 app.listen(port, () => console.log(`\x1b[34mMain app listening at port:${port}\x1b[0m`));
