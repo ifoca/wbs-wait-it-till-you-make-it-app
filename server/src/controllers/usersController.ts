@@ -35,8 +35,9 @@ export const registerUser:RequestHandler= async(req, res)=>{
 
 export const loginUser:RequestHandler = async(req,res)=>{
   const {email, password} = req.body;
-  const user = await Users.findOne({email, password});
-  if (!user || user.password !== password){
+  const user = await Users.findOne({email,password}).select('+password');
+  if (!user|| user.password !==password)
+    {
     //throw new Error( 'invalid email or password',{cause:401});
     return res.status(401).json({message: 'invalid email or password'});
   
@@ -44,15 +45,14 @@ export const loginUser:RequestHandler = async(req,res)=>{
   }
   return res.status(200).json({message:'login successfully'});
 }
-
 //post logout user
 
 export const logoutUser:RequestHandler = async(req ,res)=>{
+  //res.clearCookie
   // we need to hand token here
   return res.status(200).json({message:'logged out successfully'})
 }
-
-// delete user
+ // delete user
  
 export const deleteUser:RequestHandler = async(req,res)=>{
   const user =await Users.findByIdAndDelete(req.params.id);
