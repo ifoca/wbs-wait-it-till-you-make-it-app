@@ -9,11 +9,9 @@ const MainLayout = () => {
           Find real information for your tram and busses departure times.
         </p>
       </div>
-      <div className="p-4">
-        <Outlet />
-      </div>
+
       <div
-        className="hero min-h-screen"
+        className="hero"
         style={{
           backgroundImage: 'url(https://images.pexels.com/photos/196655/pexels-photo-196655.jpeg)',
         }}
@@ -29,6 +27,9 @@ const MainLayout = () => {
             </p>
           </div>
         </div>
+      </div>
+      <div className="p-4">
+        <Outlet />
       </div>
     </div>
   );

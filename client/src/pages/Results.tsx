@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 import { TimetableItem } from '../components';
 
+import { useParams } from 'react-router-dom';
+
 const Results = () => {
   const [stations, setStations] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const { city, station } = useParams();
+  console.log(city, station);
+
   const fetchResults = async () => {
     setLoading(true);
     try {
-      const res = await fetch(
-        'https://vrrf.finalrewind.org/Berlin/S+U%20Alexanderplatz%20Bhf.json',
-      );
+      const res = await fetch(`https://vrrf.finalrewind.org/${city}/${station}.json`);
       if (!res.ok) {
         throw new Error(`Could not fetch the results`);
       }
