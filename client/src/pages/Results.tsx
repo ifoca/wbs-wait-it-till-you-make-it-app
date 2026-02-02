@@ -33,7 +33,9 @@ const Results = () => {
 
   return (
     <>
-      <h1 className="text-center m-2 p-2">Your results for S+U Alexanderplatz Bhf: </h1>
+      <h1 className="text-center m-2 p-2">
+        Your results for {city}, {station}:{' '}
+      </h1>
       {stations || !loading ? (
         <div className="overflow-x-auto h-96 w-96">
           <table className="table table-xs table-pin-rows table-pin-cols">
