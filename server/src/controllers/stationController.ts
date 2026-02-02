@@ -22,3 +22,13 @@ if(!cities){
     }
     return res.status(200).json(stations);
  };
+
+ //post add station
+
+ export const addStation:RequestHandler= async(req,res)=>{
+    const station = await Stations.create(req.body);
+    if (!station){
+        return res.status(400).json({message:'failed to add station'});
+    }
+    return res.status(201).json({message:'station added successfully'});
+ }
