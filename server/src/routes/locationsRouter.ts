@@ -6,6 +6,5 @@ const locationsRouter= Router()
 //stations
 locationsRouter.get('/cities',getCities)
 locationsRouter.get('/stations',getStationsByCity)
-//locationsRouter.post('/addStation',addStation)
 
 export default locationsRouter
