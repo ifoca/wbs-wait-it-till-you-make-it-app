@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { Footer, Navbar } from './components';
 import { MainLayout, UserLayout } from './layouts';
-import { Homepage, Results, Login, Register, UserProfile, DeleteAccount } from './pages';
+import { Homepage, ErrorPage, Results, Login, Register, UserProfile, DeleteAccount } from './pages';
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
             <Route path="profile" element={<UserProfile />} />
             <Route path="delete" element={<DeleteAccount />} />
           </Route>
-          <Route path="*" element={<div>404 Page Not Found</div>} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
         <Footer />
       </div>
