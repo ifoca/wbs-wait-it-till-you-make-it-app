@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { Footer, Navbar } from './components';
 import { MainLayout, UserLayout } from './layouts';
-import { Login, Register, UserProfile, DeleteAccount } from './pages';
+import { Results, Login, Register, UserProfile, DeleteAccount } from './pages';
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<div>Menu</div>} /> {/* TO DO: add Menu component */}
-            <Route path="/:city/:station" element={<div>Results Page</div>} />
+            <Route path="/:city/:station" element={<Results />} />
             <Route path="/favorites" element={<div>Favorites Page</div>} />
           </Route>
           <Route path="user" element={<UserLayout />}>
