@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 const Results = () => {
   const [stations, setStations] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // to be moved in general context
 
   const { city, station } = useParams();
   console.log(city, station);
@@ -29,7 +29,7 @@ const Results = () => {
 
   useEffect(() => {
     fetchResults();
-  }, []);
+  }, [city, station]);
 
   return (
     <>

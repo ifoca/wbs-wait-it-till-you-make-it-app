@@ -8,7 +8,7 @@ const SearchBar = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!city || !station) return;
+    if (!city || !station) return; // to return error message
     navigate(`/${city}/${station}`);
   };
 
