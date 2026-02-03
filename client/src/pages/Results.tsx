@@ -1,27 +1,45 @@
 import { useEffect, useState } from 'react';
-import { LoadingMessage, TimetableItem } from '../components';
-
 import { useParams } from 'react-router-dom';
+import { ErrorMessage, LoadingMessage, TimetableItem } from '../components';
+import useErrorAndLoadingState from '../contexts/ErrorAndLoadingContext';
 
 const Results = () => {
-  const [stations, setStations] = useState(null);
-  const [loading, setLoading] = useState(true); // to be moved in general context
+  const [stations, setStations] = useState(
+    [] as Array<{
+      key: string;
+      is_cancelled: number;
+      platform: string;
+      line: string;
+      destination: string;
+      sched_time: string;
+      delay: string | null;
+      type: string; // could be used to add icons, e.g. Tram, bus etc
+    }>,
+  );
+  const { error, setError, loading, setLoading } = useErrorAndLoadingState();
 
   const { city, station } = useParams();
   console.log(city, station);
 
   const fetchResults = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch(`https://vrrf.finalrewind.org/${city}/${station}.json`);
       if (!res.ok) {
         throw new Error(`Could not fetch the results`);
       }
       const data = await res.json();
+      if (data.error !== null) {
+        throw new Error(data.error);
+      }
+
       const rawData = data.raw;
       setStations(rawData);
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error ? err.message : `Could not fetch timetable for station: ${station}`,
+      );
     } finally {
       setLoading(false);
     }
@@ -35,6 +53,10 @@ const Results = () => {
     return <LoadingMessage />;
   }
 
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
+
   return (
     <>
       <h1 className="text-center m-2 p-2">
@@ -45,11 +67,12 @@ const Results = () => {
           <table className="table table-xs table-pin-rows table-pin-cols">
             <thead>
               <tr>
-                <td>Platform</td>
+                <td>Pl.</td>
                 <td>Line</td>
-                <td>Direction</td>
-                <td>Arriving</td>
-                <td>Delay</td>
+                <td>To</td>
+                <td>Planned</td>
+                <td>New</td>
+                <td>+/-</td>
               </tr>
             </thead>
             <tbody>
@@ -59,11 +82,12 @@ const Results = () => {
             </tbody>
             <tfoot>
               <tr>
-                <td>Platform</td>
+                <td>Pl.</td>
                 <td>Line</td>
-                <td>Direction</td>
-                <td>Arriving</td>
-                <td>Delay</td>
+                <td>To</td>
+                <td>Planned</td>
+                <td>New</td>
+                <td>+/-</td>
               </tr>
             </tfoot>
           </table>

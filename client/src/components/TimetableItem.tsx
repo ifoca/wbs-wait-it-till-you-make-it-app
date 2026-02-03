@@ -9,7 +9,16 @@ const TimetableItem = ({ station }) => {
         <td>{station.line}</td>
         <td>{station.destination}</td>
         <td>{station.sched_time}</td>
-        {station.delay ? <td>{station.delay}</td> : <td>0</td>}
+        {station.delay === '0' || station.delay === null ? (
+          <td className="text-green-400">{station.sched_time}</td>
+        ) : (
+          <td className="text-red-400">{station.time}</td>
+        )}
+        {station.delay === '0' || station.delay === null ? (
+          <td className="text-green-400">0</td>
+        ) : (
+          <td className="text-red-400">+{station.delay}</td>
+        )}
       </tr>
     </>
   );

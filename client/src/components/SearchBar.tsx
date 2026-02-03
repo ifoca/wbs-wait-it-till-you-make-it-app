@@ -1,24 +1,17 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ErrorMessage from './ErrorMessage';
 
 const SearchBar = () => {
   const [city, setCity] = useState('');
   const [station, setStation] = useState('');
-  const [error, setError] = useState(null); // To do: move error state to general context
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!city || !station) {
-      setError('Please add city and station');
-    }
     navigate(`/${city}/${station}`);
   };
 
-  if (error) {
-    return <ErrorMessage error={error} />;
-  }
+  const isDisabled = !city || !station;
 
   return (
     <>
@@ -77,7 +70,12 @@ const SearchBar = () => {
             required
           />
         </label>
-        <button type="submit" className="btn bg-neutral">
+        {/* Disable the button if the input fields are empty */}
+        <button
+          type="submit"
+          className={`btn ${!isDisabled ? 'bg-neutral' : ''}`}
+          disabled={isDisabled}
+        >
           Search
         </button>
       </form>
