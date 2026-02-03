@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 import { TimetableItem } from '../components';
 
+import { useParams } from 'react-router-dom';
+
 const Results = () => {
   const [stations, setStations] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // to be moved in general context
+
+  const { city, station } = useParams();
+  console.log(city, station);
 
   const fetchResults = async () => {
     setLoading(true);
     try {
-      const res = await fetch(
-        'https://vrrf.finalrewind.org/Berlin/S+U%20Alexanderplatz%20Bhf.json',
-      );
+      const res = await fetch(`https://vrrf.finalrewind.org/${city}/${station}.json`);
       if (!res.ok) {
         throw new Error(`Could not fetch the results`);
       }
@@ -26,11 +29,13 @@ const Results = () => {
 
   useEffect(() => {
     fetchResults();
-  }, []);
+  }, [city, station]);
 
   return (
     <>
-      <h1 className="text-center m-2 p-2">Your results for S+U Alexanderplatz Bhf: </h1>
+      <h1 className="text-center m-2 p-2">
+        Your results for {city}, {station}:{' '}
+      </h1>
       {stations || !loading ? (
         <div className="overflow-x-auto h-96 w-96">
           <table className="table table-xs table-pin-rows table-pin-cols">

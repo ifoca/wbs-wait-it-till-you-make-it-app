@@ -1,5 +1,7 @@
 const TimetableItem = ({ station }) => {
   console.log(station);
+  // TO do: add condition to render `cancelled` in the Delay column
+  // if we have in the response: station.is_cancelled === 1
   return (
     <>
       <tr>
