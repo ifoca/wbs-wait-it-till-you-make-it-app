@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 
 const SearchBar = () => {
@@ -71,6 +70,7 @@ const SearchBar = () => {
             required
           />
         </label>
+        {/* Disable the button if the input fields are empty */}
         <button
           type="submit"
           className={`btn ${!isDisabled ? 'bg-neutral' : ''}`}
