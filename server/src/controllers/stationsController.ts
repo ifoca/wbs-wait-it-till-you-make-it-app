@@ -3,7 +3,7 @@ import { Stations } from '#models';
 
 // Get all cities
 export const getCities: RequestHandler = async (req, res) => {
-  const cities = await Stations.find({}).select('cityName');
+  const cities = await Stations.distinct('cityName');
 
   if (!cities) {
     return res.status(404).json({ message: 'no city found' });
@@ -26,4 +26,6 @@ export const getStationsByCity: RequestHandler = async (req, res) => {
 };
 
 // Create a station for a city
-export const createStationForCity: RequestHandler = async (req, res) => {};
+export const createStationForCity: RequestHandler = async (req, res) => {
+  // To do
+};
