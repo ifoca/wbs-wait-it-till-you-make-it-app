@@ -1,16 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ErrorMessage from './ErrorMessage';
 
 const SearchBar = () => {
   const [city, setCity] = useState('');
   const [station, setStation] = useState('');
+  const [error, setError] = useState(null); // To do: move error state to general context
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!city || !station) return; // to return error message
+    if (!city || !station) {
+      setError('Please add city and station');
+    }
     navigate(`/${city}/${station}`);
   };
+
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
 
   return (
     <>
@@ -38,8 +46,8 @@ const SearchBar = () => {
             value={city}
             onChange={(e) => setCity(e.target.value)}
             type="text"
-            required
             placeholder="City"
+            required
           />
         </label>
 
@@ -66,9 +74,9 @@ const SearchBar = () => {
             onChange={(e) => setStation(e.target.value)}
             type="text"
             placeholder="Station name"
+            required
           />
         </label>
-        <div className="validator-hint hidden">Enter both city and station name</div>
         <button type="submit" className="btn bg-neutral">
           Search
         </button>

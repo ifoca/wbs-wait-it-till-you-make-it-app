@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { TimetableItem } from '../components';
+import { LoadingMessage, TimetableItem } from '../components';
 
 import { useParams } from 'react-router-dom';
 
@@ -30,6 +30,10 @@ const Results = () => {
   useEffect(() => {
     fetchResults();
   }, [city, station]);
+
+  if (loading) {
+    return <LoadingMessage />;
+  }
 
   return (
     <>
