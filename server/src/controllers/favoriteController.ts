@@ -1,7 +1,7 @@
 import type { RequestHandler } from "express";
 import { Favorites } from "#models";
 
-        // add a station to favorites
+        // To Add a station to favorites
         //Post the favorite station
 export const addFavorite : RequestHandler = async (req, res)=>{
     try {
@@ -34,8 +34,7 @@ export const getFavoritesByUser:RequestHandler = async(req,res)=>{
     } catch(error){
         return res.status(500).json({message:'server error, please try again later'});
     }
-}
-        
+};
 
                //Delete a favorite station
 
