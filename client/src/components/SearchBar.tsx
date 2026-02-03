@@ -47,6 +47,7 @@ const SearchBar = () => {
             onChange={(e) => setCity(e.target.value)}
             type="text"
             placeholder="City"
+            required
           />
         </label>
 
@@ -73,6 +74,7 @@ const SearchBar = () => {
             onChange={(e) => setStation(e.target.value)}
             type="text"
             placeholder="Station name"
+            required
           />
         </label>
         <button type="submit" className="btn bg-neutral">
