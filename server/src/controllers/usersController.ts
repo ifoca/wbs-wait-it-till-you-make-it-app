@@ -1,5 +1,8 @@
 import type { RequestHandler } from 'express';
 import { Users } from '#models';
+import {ACCESS_JWT_SECRET, SALT_ROUNDS} from '#config';
+import bcrypt from 'bcryptjs'
+
 
 export const getUsers: RequestHandler = async (req, res) => {
   const users = await Users.find();
@@ -23,11 +26,23 @@ export const getUserById: RequestHandler =async(req,res)=>{
 //post register user
 
 export const registerUser:RequestHandler= async(req, res)=>{
-  const user =await Users.create(req.body);
-  if (!user){
-    throw new Error('User registration failed', {cause:400});
-  }
-  return res.status(201).json({message:'User registered successfully'});
+ const {username,email,password}=req.body
+ const userAlreadyExists = await Users.exists({email});
+ if (userAlreadyExists){
+  throw new Error ('user already have an account',{cause:409});
+ }
+ const theSaltRounds = await bcrypt.genSalt(SALT_ROUNDS);
+ const hashedPassword = await bcrypt.hash(password,theSaltRounds);
+const user = await Users.create({
+  username,
+  email,
+  password:hashedPassword
+});
+ return res.status(201).json({message:'User registered successfully'});
+  //if (!user){
+   // throw new Error('User registration failed', {cause:400});
+  //}
+ 
 };
 
 
