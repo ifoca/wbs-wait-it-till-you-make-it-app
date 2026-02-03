@@ -8,56 +8,58 @@ export const getUsers: RequestHandler = async (req, res) => {
   }
   return res.status(200).json(users);
 };
-// get user by id 
 
-
-export const getUserById: RequestHandler =async(req,res)=>{
+// get user by id
+export const getUserById: RequestHandler = async (req, res) => {
   const user = await Users.findById(req.params.id);
-  if (!user){
-    throw new Error('user not found', { cause: 404 });
-
+  if (!user) {
+    throw new Error('User not found', { cause: 404 });
   }
   return res.status(200).json(user);
 };
 
 //post register user
+export const registerUser: RequestHandler = async (req, res) => {
+  const { username, email, password } = req.body;
 
-export const registerUser:RequestHandler= async(req, res)=>{
-  const user =await Users.create(req.body);
-  if (!user){
-    throw new Error('User registration failed', {cause:400});
+  // Check if email is used already
+  const userExists = await Users.findOne({ email });
+  if (userExists) {
+    throw new Error('User already exists', { cause: 400 });
   }
-  return res.status(201).json({message:'User registered successfully'});
+
+  const newUser = await Users.create({ username, email, password });
+  if (!newUser) {
+    throw new Error('User registration failed', { cause: 400 });
+  }
+  return res.status(201).json({ message: 'User registered successfully' });
 };
 
-
 //post login user
-
-export const loginUser:RequestHandler = async(req,res)=>{
-  const {email, password} = req.body;
-  const user = await Users.findOne({email,password}).select('+password');
-  if (!user|| user.password !==password)
-    {
+export const loginUser: RequestHandler = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await Users.findOne({ email, password }).select('+password');
+  if (!user || user.password !== password) {
     //throw new Error( 'invalid email or password',{cause:401});
-    return res.status(401).json({message: 'invalid email or password'});
-  
-    // we all need to handle token here 
-  }
-  return res.status(200).json({message:'login successfully'});
-}
-//post logout user
+    return res.status(401).json({ message: 'Invalid email or password' });
 
-export const logoutUser:RequestHandler = async(req ,res)=>{
+    // we all need to handle token here
+  }
+  return res.status(200).json({ message: 'Logged in successfully' });
+};
+
+//post logout user
+export const logoutUser: RequestHandler = async (req, res) => {
   //res.clearCookie
   // we need to hand token here
-  return res.status(200).json({message:'logged out successfully'})
-}
- // delete user
- 
-export const deleteUser:RequestHandler = async(req,res)=>{
-  const user =await Users.findByIdAndDelete(req.params.id);
-  if (!user){
-    throw new Error ('user not registered or found',{cause:404});
+  return res.status(200).json({ message: 'Logged out successfully' });
+};
+
+// delete user
+export const deleteUser: RequestHandler = async (req, res) => {
+  const user = await Users.findByIdAndDelete(req.params.id);
+  if (!user) {
+    throw new Error('User not registered or found', { cause: 404 });
   }
-  return  res.status(200).json({message:'account deleted successfully'})
+  return res.status(200).json({ message: 'Account deleted successfully' });
 };
