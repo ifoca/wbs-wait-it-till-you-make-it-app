@@ -7,3 +7,10 @@ export const normalizeGermanText = (text: string): string => {
     .replace(/ß/g, 'ss')
     .trim();
 };
+
+/*
+Examples:
+    normalizeGermanText("Düsseldorf")  -> "duesseldorf"
+    normalizeGermanText("München")     -> "muenchen"
+    normalizeGermanText("Köln")        -> "koeln"
+*/
