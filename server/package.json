@@ -31,6 +31,10 @@
     "#types": {
       "development": "./src/types/index.ts",
       "default": "./dist/types/index.js"
+    },
+    "#config": {
+      "development": "./src/config/index.ts",
+      "default": "./dist/config/index.js"
     }
   },
   "scripts": {
