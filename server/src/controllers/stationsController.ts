@@ -14,7 +14,9 @@ export const getCities: RequestHandler = async (req, res) => {
 
 // Get Stations for a city
 export const getStationsByCity: RequestHandler = async (req, res) => {
-  const { cityName } = req.params;
+  try {
+    const { cityName } = req.params;
+  } catch {}
 
   // Normalize the search query
   const normalizedSearch = normalizeGermanText(cityName); // "duesseldorf"
@@ -36,12 +38,45 @@ export const getStationsByCity: RequestHandler = async (req, res) => {
 
 // Create a station for a city
 export const createStationForCity: RequestHandler = async (req, res) => {
-  // To do
-  // const newStation = {
-  //   cityName: 'Düsseldorf',
-  //   cityNameNormalized: normalizeGermanText('Düsseldorf'), // "duesseldorf"
-  //   stationName: 'Spichernplatz',
-  //   stationNameNormalized: normalizeGermanText('Spichernplatz'), // "spichernplatz"
-  // };
-  // await Stations.create(newStation);
+  try {
+    const { cityName, stationName } = req.body;
+    // Check that city and station name are not empty
+    if (!cityName || !stationName) {
+      return res.status(400).json({
+        message: 'Invalid request. cityName and stationName are required',
+      });
+    }
+    // Normalize (to check for duplicates)
+    const normalizedCity = normalizeGermanText(cityName);
+    const normalizedStation = normalizeGermanText(stationName);
+
+    // Check if this station already exists
+    const existingStation = await Stations.findOne({
+      cityNameNormalized: normalizedCity,
+      stationNameNormalized: normalizedStation,
+    });
+    if (existingStation) {
+      return res.status(409).json({
+        // 409 = Conflict
+        message: `Station "${stationName}" in "${cityName}" already exists`,
+        station: existingStation,
+      });
+    }
+
+    // Create new station (normalization happens automatically via middleware)
+    const newLocation = await Stations.create({
+      cityName,
+      stationName,
+      // cityNameNormalized and stationNameNormalized auto-set by middleware!
+    });
+    return res.status(201).json({
+      message: 'Location added successfully',
+      station: newLocation,
+    });
+  } catch (error) {
+    console.error('Error creating station:', error);
+    return res.status(500).json({
+      message: 'Internal server error',
+    });
+  }
 };
