@@ -47,7 +47,7 @@ stationsSchema.pre('save', function () {
     this.cityNameNormalized = normalizeGermanText(this.cityName);
   }
   if (this.isModified('stationName')) {
-    this.cityName = capitalizeFirstLetter(this.cityName);
+    this.stationName = capitalizeFirstLetter(this.stationName);
     this.stationNameNormalized = normalizeGermanText(this.stationName);
   }
 });
