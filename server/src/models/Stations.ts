@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { normalizeGermanText } from '#utils';
+import { normalizeGermanText, capitalizeFirstLetter } from '#utils';
 
 const stationsSchema = new Schema(
   {
@@ -43,9 +43,11 @@ const stationsSchema = new Schema(
 stationsSchema.pre('save', function () {
   // Only normalize if cityName or stationName changed
   if (this.isModified('cityName')) {
+    this.cityName = capitalizeFirstLetter(this.cityName);
     this.cityNameNormalized = normalizeGermanText(this.cityName);
   }
   if (this.isModified('stationName')) {
+    this.cityName = capitalizeFirstLetter(this.cityName);
     this.stationNameNormalized = normalizeGermanText(this.stationName);
   }
 });
@@ -61,14 +63,16 @@ stationsSchema.pre('findOneAndUpdate', function () {
   }
 });
 
+stationsSchema.index({ cityNameNormalized: 1, stationNameNormalized: 1 }, { unique: true });
+
 export default model('Stations', stationsSchema);
 
 /*
 
 interface IStation {
   cityName: string;              // "Düsseldorf" - canonical version
-  cityNameNormalized: string;    // "dusseldorf" - for searching
+  cityNameNormalized: string;    // "Dusseldorf" - for searching
   stationName: string;           // "Spichernplatz" - canonical
-  stationNameNormalized: string; // "spichernplatz" - for searching
+  stationNameNormalized: string; // "Spichernplatz" - for searching
 }
 */
