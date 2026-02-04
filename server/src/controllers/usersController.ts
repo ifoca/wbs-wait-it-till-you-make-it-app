@@ -1,7 +1,10 @@
 import type { RequestHandler } from 'express';
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import { Users } from '#models';
 import {ACCESS_JWT_SECRET, SALT_ROUNDS} from '#config';
-import bcrypt from 'bcryptjs'
+import { cookiesOptions } from '#config/cookiesOptions';
+
 
 
 export const getUsers: RequestHandler = async (req, res) => {
@@ -12,13 +15,10 @@ export const getUsers: RequestHandler = async (req, res) => {
   return res.status(200).json(users);
 };
 // get user by id 
-
-
 export const getUserById: RequestHandler =async(req,res)=>{
   const user = await Users.findById(req.params.id);
   if (!user){
     throw new Error('user not found', { cause: 404 });
-
   }
   return res.status(200).json(user);
 };
@@ -38,28 +38,29 @@ const user = await Users.create({
   email,
   password:hashedPassword
 });
- return res.status(201).json({message:'User registered successfully'});
-  //if (!user){
-   // throw new Error('User registration failed', {cause:400});
-  //}
+ const theUserToken = jwt.sign({USER_ID: user._id}, ACCESS_JWT_SECRET, { expiresIn: '10d' });
+
  
+ res.cookie('token',theUserToken,cookiesOptions)
+
+ return res.status(201).json({ message: 'your account was successfully created', token: theUserToken});
 };
 
-
 //post login user
-
 export const loginUser:RequestHandler = async(req,res)=>{
-  const {email, password} = req.body;
-  const user = await Users.findOne({email,password}).select('+password');
-  if (!user|| user.password !==password)
-    {
-    //throw new Error( 'invalid email or password',{cause:401});
-    return res.status(401).json({message: 'invalid email or password'});
-  
-    // we all need to handle token here 
+  const {email,password} = req.body;
+  const user = await Users.findOne({email}).select('+password');
+  if (!user){
+    return res.status(401).json({message: 'invalid email or password, please create and account'});
   }
-  return res.status(200).json({message:'login successfully'});
-}
+  const isTheLoginPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isTheLoginPasswordValid) {
+    return res.status(401).json({message: 'invalid email or password'});
+  }
+  const theUserToken = jwt.sign({USER_ID: user._id}, ACCESS_JWT_SECRET, { expiresIn: '10d' });
+  return res.status(200).json({message: 'login successfully', token: theUserToken});
+};
+
 //post logout user
 
 export const logoutUser:RequestHandler = async(req ,res)=>{
