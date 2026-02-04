@@ -9,7 +9,6 @@ const stationsSchema = new Schema(
     },
     cityNameNormalized: {
       type: String,
-      required: false,
     },
     stationName: {
       type: String,
@@ -17,7 +16,6 @@ const stationsSchema = new Schema(
     },
     stationNameNormalized: {
       type: String,
-      required: false,
     },
     searchCount: {
       type: Number,
