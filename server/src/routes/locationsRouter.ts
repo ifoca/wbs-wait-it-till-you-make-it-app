@@ -6,8 +6,9 @@ const locationsRouter = Router();
 //stations
 locationsRouter.get('/cities', getCities); // used for search suggestions
 locationsRouter.get('/:cityName/stations', getStationsByCity); // used for search suggestions
+locationsRouter.post('/add', createStationForCity);
 
 // To do:
-locationsRouter.post('/', createStationForCity);
+// locationsRouter.get('/:cityName/:stationName/departures', getDepartures);
 
 export default locationsRouter;

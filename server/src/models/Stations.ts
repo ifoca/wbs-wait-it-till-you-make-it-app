@@ -9,7 +9,7 @@ const stationsSchema = new Schema(
     },
     cityNameNormalized: {
       type: String,
-      required: true,
+      required: false,
     },
     stationName: {
       type: String,
@@ -17,7 +17,7 @@ const stationsSchema = new Schema(
     },
     stationNameNormalized: {
       type: String,
-      required: true,
+      required: false,
     },
     searchCount: {
       type: Number,
@@ -37,6 +37,29 @@ const stationsSchema = new Schema(
     timestamps: true,
   },
 );
+
+// Pre-save middleware, to automatically normalize the text
+// and save the normalized city and station names
+stationsSchema.pre('save', function () {
+  // Only normalize if cityName or stationName changed
+  if (this.isModified('cityName')) {
+    this.cityNameNormalized = normalizeGermanText(this.cityName);
+  }
+  if (this.isModified('stationName')) {
+    this.stationNameNormalized = normalizeGermanText(this.stationName);
+  }
+});
+
+stationsSchema.pre('findOneAndUpdate', function () {
+  const update = this.getUpdate() as any;
+
+  if (update.cityName) {
+    update.cityNameNormalized = normalizeGermanText(update.cityName);
+  }
+  if (update.stationName) {
+    update.stationNameNormalized = normalizeGermanText(update.stationName);
+  }
+});
 
 export default model('Stations', stationsSchema);
 
