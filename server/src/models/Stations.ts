@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { normalizeGermanText } from '#utils';
 
 const stationsSchema = new Schema(
   {
@@ -6,7 +7,15 @@ const stationsSchema = new Schema(
       type: String,
       required: true,
     },
+    cityNameNormalized: {
+      type: String,
+      required: true,
+    },
     stationName: {
+      type: String,
+      required: true,
+    },
+    stationNameNormalized: {
       type: String,
       required: true,
     },
@@ -30,3 +39,13 @@ const stationsSchema = new Schema(
 );
 
 export default model('Stations', stationsSchema);
+
+/*
+
+interface IStation {
+  cityName: string;              // "Düsseldorf" - canonical version
+  cityNameNormalized: string;    // "dusseldorf" - for searching
+  stationName: string;           // "Spichernplatz" - canonical
+  stationNameNormalized: string; // "spichernplatz" - for searching
+}
+*/

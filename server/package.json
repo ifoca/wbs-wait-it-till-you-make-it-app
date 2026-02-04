@@ -35,6 +35,10 @@
     "#config": {
       "development": "./src/config/index.ts",
       "default": "./dist/config/index.js"
+    },
+    "#utils": {
+      "development": "./src/utils/index.ts",
+      "default": "./dist/utils/index.js"
     }
   },
   "scripts": {

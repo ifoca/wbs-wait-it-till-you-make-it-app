@@ -1,10 +1,13 @@
 import { Router } from 'express';
-import { getCities, getStationsByCity, } from '#controllers';
+import { getCities, getStationsByCity, createStationForCity } from '#controllers';
 
+const locationsRouter = Router();
 
-const locationsRouter= Router()
 //stations
-locationsRouter.get('/cities',getCities)
-locationsRouter.get('/stations',getStationsByCity)
+locationsRouter.get('/cities', getCities); // used for search suggestions
+locationsRouter.get('/:cityName/stations', getStationsByCity); // used for search suggestions
 
-export default locationsRouter
+// To do:
+locationsRouter.post('/', createStationForCity);
+
+export default locationsRouter;
