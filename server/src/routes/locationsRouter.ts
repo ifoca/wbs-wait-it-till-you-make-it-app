@@ -10,5 +10,5 @@ locationsRouter.post('/add', createStationForCity);
 
 // To do:
 // locationsRouter.get('/:cityName/:stationName/departures', getDepartures);
-
+// ? endpoint to update the locations ?
 export default locationsRouter;
