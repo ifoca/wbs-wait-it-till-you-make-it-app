@@ -6,7 +6,7 @@ import { normalizeGermanText } from '#utils';
 export const getCities: RequestHandler = async (req, res) => {
   const cities = await Stations.distinct('cityName');
 
-  if (!cities) {
+  if (cities.length === 0) {
     return res.status(404).json({ message: 'no city found' });
   }
   return res.status(200).json(cities);
@@ -17,14 +17,12 @@ export const getStationsByCity: RequestHandler = async (req, res) => {
   const { cityName } = req.params;
 
   // Normalize the search query
-  const normalizedSearch = normalizeGermanText(cityName); // "duesseldorf"
+  const normalizedSearch = normalizeGermanText(cityName);
 
-  // Search using the normalized text
-  const stations = await Stations.find({
+  // Search using the normalized text and return canonical text
+  const stations = await Stations.distinct('stationName', {
     cityNameNormalized: normalizedSearch,
-  })
-    .distinct('stationName') // returns only the station names, not everything
-    .lean();
+  });
   // .sort({ searchCount: -1 })  Can be added in the future to sort for the most popular station
   // .limit(10);  Can be added in the future to limit the number of stations we get
 
@@ -36,12 +34,46 @@ export const getStationsByCity: RequestHandler = async (req, res) => {
 
 // Create a station for a city
 export const createStationForCity: RequestHandler = async (req, res) => {
-  // To do
-  // const newStation = {
-  //   cityName: 'Düsseldorf',
-  //   cityNameNormalized: normalizeGermanText('Düsseldorf'), // "duesseldorf"
-  //   stationName: 'Spichernplatz',
-  //   stationNameNormalized: normalizeGermanText('Spichernplatz'), // "spichernplatz"
-  // };
-  // await Stations.create(newStation);
+  try {
+    const { cityName, stationName } = req.body;
+    // Check that city and station name are not empty
+    if (!cityName || !stationName) {
+      return res.status(400).json({
+        message: 'Invalid request. cityName and stationName are required',
+      });
+    }
+    // Normalize text to to check for duplicates
+    const normalizedCity = normalizeGermanText(cityName);
+    const normalizedStation = normalizeGermanText(stationName);
+
+    // Check if this station already exists
+    const existingStation = await Stations.findOne({
+      cityNameNormalized: normalizedCity,
+      stationNameNormalized: normalizedStation,
+    });
+    if (existingStation) {
+      return res.status(409).json({
+        message: `Station "${stationName}" in "${cityName}" already exists`,
+        station: existingStation,
+      });
+    }
+
+    // Create new station (normalization happens automatically
+    // via middleware in the Stations Model)
+    const newLocation = await Stations.create({
+      cityName,
+      stationName,
+      // cityNameNormalized and stationNameNormalized auto-set saved
+    });
+
+    return res.status(201).json({
+      message: 'Location added successfully',
+      station: newLocation,
+    });
+  } catch (error) {
+    console.error('Error creating station:', error);
+    return res.status(500).json({
+      message: 'Internal server error',
+    });
+  }
 };
