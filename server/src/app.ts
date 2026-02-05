@@ -19,6 +19,8 @@ app.use('/auth/user', usersRouter);
 app.use('/locations',locationsRouter);
 //for users to manage their favorite stations
 app.use('/favorites',favoriteRouter);
+
+
 app.use(errorHandler);
 
 
