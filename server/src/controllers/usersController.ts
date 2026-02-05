@@ -81,14 +81,20 @@ export const logoutUser:RequestHandler = async(req ,res)=>{
 }
  // delete user
  
-export const deleteUser:RequestHandler = async(req,res)=>{
-  if (req.userId !== req.params.id) {
-    throw new Error({message: 'unauthorized to delete this account'});
+export const deleteUser: RequestHandler = async (req, res) => {
+  try {
+    if (String(req.userId) !== String(req.params.id)) {
+      return res.status(403).json({ message: 'unauthorized to delete this account' });
+    }
+
+    const user = await Users.findByIdAndDelete(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'user not registered or found' });
+    }
+
+    res.clearCookie('token', cookieOptions);
+    return res.status(200).json({ message: 'account deleted successfully' });
+  } catch (err) {
+    return res.status(500).json({ message: 'failed to delete account' });
   }
-  const user = await Users.findByIdAndDelete(req.params.id);
-  if (!user){
-    throw new Error ('user not registered or found',{cause:404});
-  }
-  res.clearCookie('token', cookieOptions);
-  return  res.status(200).json({message:'account deleted successfully'})
 };
