@@ -6,13 +6,13 @@ import { ACCESS_JWT_SECRET } from "#config";
 
 
 export const Auth: RequestHandler =async(req, res, next) =>{
- const {userToken}=req.cookies;
+ const {token}=req.cookies;
 
- if (!userToken){
-    throw new Error("your not authorized", ({cause:{status:401}}));
+ if (!token){
+    return res.status(401).json({message: 'your are not authorized,try to login first'}); 
  }
  try{
- const payload  = Jwt.verify(userToken, ACCESS_JWT_SECRET)as JwtPayload;
+ const payload  = Jwt.verify(token, ACCESS_JWT_SECRET)as JwtPayload;
     req.userId = payload.USER_ID;
     next();
  }catch(error){
