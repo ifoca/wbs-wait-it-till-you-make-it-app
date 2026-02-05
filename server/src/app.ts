@@ -3,6 +3,8 @@ import '#db';
 import cors from 'cors';
 import { usersRouter,locationsRouter,favoriteRouter } from '#routes';
 import cookieParser from 'cookie-parser';
+import { errorHandler } from '#middleware';
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -17,5 +19,7 @@ app.use('/auth/user', usersRouter);
 app.use('/locations',locationsRouter);
 //for users to manage their favorite stations
 app.use('/favorites',favoriteRouter);
+app.use(errorHandler);
+
 
 app.listen(port, () => console.log(`\x1b[34mMain app listening at port:${port}\x1b[0m`));
