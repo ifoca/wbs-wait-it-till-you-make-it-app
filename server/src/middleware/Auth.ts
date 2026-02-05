@@ -1,30 +1,22 @@
 import type { RequestHandler } from "express";
-import Jwt from "jsonwebtoken";
+import type { JwtPayload } from "jsonwebtoken";
+import   Jwt  from "jsonwebtoken";
 import { ACCESS_JWT_SECRET } from "#config";
 
-declare global {
-   namespace Express {
-      interface Request {
-         userId?: string;
-      }
-   }
-}
 
-export const Auth: RequestHandler = async (req, res, next) => {
-   try {
-      const token = req.cookies?.token;
-      if (!token) {
-         return res.status(401).json({ message: "Not authorized" });
-      }
 
-      const verified = Jwt.verify(token, ACCESS_JWT_SECRET) as { USER_ID?: string };
-      if (!verified || !verified.USER_ID) {
-         return res.status(401).json({ message: "Invalid token" });
-      }
+export const Auth: RequestHandler =async(req, res, next) =>{
+ const {userToken}=req.cookies;
 
-      req.userId = String(verified.USER_ID);
-      return next();
-   } catch (err) {
-      return res.status(401).json({ message: "Authentication failed" });
-   }
+ if (!userToken){
+    throw new Error("your not authorized", ({cause:{status:401}}));
+ }
+ try{
+ const payload  = Jwt.verify(userToken, ACCESS_JWT_SECRET)as JwtPayload;
+    req.userId = payload.USER_ID;
+    next();
+ }catch(error){
+   return  res.status(401).json({message: 'invalid token, try to login again'});
+ }
 };
+export default Auth;

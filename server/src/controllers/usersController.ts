@@ -43,8 +43,8 @@ const user = await Users.create({
 });
 const theUserToken = jwt.sign({USER_ID: user._id}, ACCESS_JWT_SECRET, { expiresIn: '10d' });
 
-// to remove password from the response.
-//const userObj = user.toObject() as Partial<UserType>
+// we need to to remove password from the response.
+// and we will use 'const userObj = user.toObject() as Partial<UserType>
 //delete userObj.password;
 
 res.cookie('token', theUserToken, cookieOptions);
