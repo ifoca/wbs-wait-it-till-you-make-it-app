@@ -1,6 +1,7 @@
 import type { RequestHandler } from 'express';
 import { Stations } from '#models';
 import { normalizeGermanText } from '#utils';
+import { DEPARTURES_API } from '#config';
 
 // Get all cities
 export const getCities: RequestHandler = async (req, res) => {
@@ -42,7 +43,7 @@ export const createStationForCity: RequestHandler = async (req, res) => {
         message: 'Invalid request. cityName and stationName are required',
       });
     }
-    // Normalize text to to check for duplicates
+    // Normalize text to check for duplicates
     const normalizedCity = normalizeGermanText(cityName);
     const normalizedStation = normalizeGermanText(stationName);
 
@@ -76,4 +77,33 @@ export const createStationForCity: RequestHandler = async (req, res) => {
       message: 'Internal server error',
     });
   }
+};
+
+export const getDepartures: RequestHandler = async (req, res) => {
+  const departuresApi = DEPARTURES_API;
+
+  // TO DO: move the implementation for env variable separately
+  // TO DO: add logic to hit the endpoint to make sure it is up and running
+  // check that GET https://vrrf.finalrewind.org/ is returning a 200 OK
+  // try {
+  //   if (!externalDeparturesApi) throw new Error('Missing link to the external API');
+  // } catch (error) {
+  //   console.error('External API connection error:', error);
+  //   process.exit(1);
+  // }
+
+  const { cityName, stationName } = req.params;
+  // TO DO: normalize the parameters and search if they exist in the database
+  // then add the canonical name as a search parameter
+  const apiResults = await fetch(`${departuresApi}/${cityName}/${stationName}.json`);
+  if (!apiResults.ok) {
+    throw new Error('Could not get results from the external API');
+  }
+
+  const departures = await apiResults.json();
+  console.log(departures);
+  if (departures.error) {
+    return res.status(404).json({ message: departures.error });
+  }
+  return res.status(200).json(departures.raw);
 };
