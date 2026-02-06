@@ -1,14 +1,14 @@
-import type { RequestHandler,CookieOptions } from 'express';
+import type { RequestHandler, CookieOptions } from 'express';
 import { Users } from '#models';
 import { ACCESS_JWT_SECRET, SALT_ROUNDS } from '#config';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
-const isProduction =process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production';
 const cookieOptions: CookieOptions = {
   httpOnly: true,
   secure: isProduction,
-  sameSite: 'none'
+  sameSite: 'none',
 };
 
 // get all users
@@ -35,7 +35,7 @@ export const registerUser: RequestHandler = async (req, res) => {
   const userAlreadyExists = await Users.exists({ email });
   if (userAlreadyExists) {
     throw new Error('User already all have an account', { cause: 409 });
-  };
+  }
   const theSaltRounds = await bcrypt.genSalt(SALT_ROUNDS);
   const hashedPassword = await bcrypt.hash(password, theSaltRounds);
 
@@ -44,55 +44,58 @@ export const registerUser: RequestHandler = async (req, res) => {
     email,
     password: hashedPassword,
   });
-  const theUserToken = jwt.sign({USER_ID: user._id}, ACCESS_JWT_SECRET, { expiresIn: '10d' });
+  const theUserToken = jwt.sign({ USER_ID: user._id }, ACCESS_JWT_SECRET, { expiresIn: '10d' });
 
-// we need to to remove password from the response.
-// and we will use 'const userObj = user.toObject() as Partial<UserType>
-//delete userObj.password;
+  // we need to to remove password from the response.
+  // and we will use 'const userObj = user.toObject() as Partial<UserType>
+  //delete userObj.password;
 
-res.cookie('token', theUserToken, cookieOptions);
+  res.cookie('token', theUserToken, cookieOptions);
 
- return res.status(201).json({ message: 'your account was successfully created', token: theUserToken});
+  return res
+    .status(201)
+    .json({ message: 'your account was successfully created', token: theUserToken });
 };
 
 //post login user
-export const loginUser:RequestHandler = async(req,res)=>{
-  const {email,password} = req.body;
-  const userAlreadyExists = await Users.exists({email});
- if (Users.length===0){
-  throw new Error ('email is not registered' ,{cause :404});
- }
-  const user = await Users.findOne({email}).select('+password');
-  if (!user){
-    return res.status(401).json({message: 'invalid email or password, please create and account'});
+export const loginUser: RequestHandler = async (req, res) => {
+  const { email, password } = req.body;
+  const userAlreadyExists = await Users.exists({ email });
+  if (Users.length === 0) {
+    throw new Error('email is not registered', { cause: 404 });
+  }
+  const user = await Users.findOne({ email }).select('+password');
+  if (!user) {
+    return res
+      .status(401)
+      .json({ message: 'invalid email or password, please create and account' });
   }
   const isTheLoginPasswordValid = await bcrypt.compare(password, user.password);
   if (!isTheLoginPasswordValid) {
-    return res.status(400).json({message: 'incorrect credentials '});
+    return res.status(400).json({ message: 'incorrect credentials ' });
   }
-  const theUserToken = jwt.sign({USER_ID: user._id}, ACCESS_JWT_SECRET, { expiresIn: '10d' });
+  const theUserToken = jwt.sign({ USER_ID: user._id }, ACCESS_JWT_SECRET, { expiresIn: '10d' });
 
-  res.cookie('token', theUserToken, cookieOptions)
-  return res.status(200).json({message: 'login successfully', token: theUserToken});
+  res.cookie('token', theUserToken, cookieOptions);
+  return res.status(200).json({ message: 'login successfully', token: theUserToken });
 };
 
 //post logout user
 export const logoutUser: RequestHandler = async (req, res) => {
-res.clearCookie('token', cookieOptions);
+  res.clearCookie('token', cookieOptions);
   return res.status(200).json({ message: 'Logged out successfully' });
 };
 
 // delete user
 export const deleteUser: RequestHandler = async (req, res) => {
- 
   const userWithToken = req.userId;
   const userWithParams = req.params.id;
-  if (userWithToken !== userWithParams){
-    return res.status(403).json({message: 'unauthorize user'})
-  };
+  if (userWithToken !== userWithParams) {
+    return res.status(403).json({ message: 'unauthorize user' });
+  }
   const user = await Users.findByIdAndDelete(req.params.id);
   if (!user) {
     throw new Error('User not registered or found', { cause: 404 });
-  };
+  }
   return res.status(200).json({ message: 'Account deleted successfully' });
 };

@@ -2,20 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ErrorMessage, LoadingMessage, TimetableItem } from '../components';
 import useErrorAndLoadingState from '../contexts/ErrorAndLoadingContext';
+import { type Station } from '../types/stations';
 
 const Results = () => {
-  const [stations, setStations] = useState(
-    [] as Array<{
-      key: string;
-      is_cancelled: number;
-      platform: string;
-      line: string;
-      destination: string;
-      sched_time: string;
-      delay: string | null;
-      type: string; // could be used to add icons, e.g. Tram, bus etc
-    }>,
-  );
+  const [stations, setStations] = useState<Station[]>([]);
   const { error, setError, loading, setLoading } = useErrorAndLoadingState();
 
   const { city, station } = useParams();
