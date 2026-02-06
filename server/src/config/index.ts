@@ -10,6 +10,7 @@ const envSchema = z.object({
     .min(64),
   CLIENT_BASE_URL: z.url().default('http://localhost:5173'),
   DEPARTURES_API: z.url(),
+  DB_NAME: z.string(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
@@ -19,4 +20,5 @@ if (!parsedEnv.success) {
   process.exit(1);
 }
 
-export const { ACCESS_JWT_SECRET, CLIENT_BASE_URL, SALT_ROUNDS, DEPARTURES_API } = parsedEnv.data;
+export const { ACCESS_JWT_SECRET, CLIENT_BASE_URL, SALT_ROUNDS, DEPARTURES_API, DB_NAME } =
+  parsedEnv.data;

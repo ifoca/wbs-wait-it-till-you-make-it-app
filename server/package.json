@@ -42,11 +42,11 @@
     }
   },
   "scripts": {
-    "dev": "node --env-file=.env --watch --conditions development src/app.ts",
+    "dev": "node --env-file=.env.development.local --watch --conditions development src/app.ts",
     "prebuild": "rm -rf dist",
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "node dist/app.js"
+    "start": "node --env-file=.env.production.local dist/app.js"
   },
   "keywords": [],
   "author": "",
@@ -55,6 +55,7 @@
   "dependencies": {
     "@types/cookie-parser": "^1.4.10",
     "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
