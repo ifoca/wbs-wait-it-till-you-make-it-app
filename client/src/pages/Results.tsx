@@ -24,18 +24,24 @@ const Results = () => {
   const fetchResults = async () => {
     setLoading(true);
     setError(null);
+
+    const baseURL = import.meta.env.VITE_SERVER_API_URL;
+    console.log('Server base URL is: ', baseURL);
     try {
-      const res = await fetch(`https://vrrf.finalrewind.org/${city}/${station}.json`);
+      const res = await fetch(`${baseURL}/locations/${city}/${station}/departures`);
       if (!res.ok) {
         throw new Error(`Could not fetch the results`);
       }
+
       const data = await res.json();
-      if (data.error !== null) {
+      console.log(data);
+
+      if (data.error) {
+        console.log('I got an error, it is', data.error);
         throw new Error(data.error);
       }
-
-      const rawData = data.raw;
-      setStations(rawData);
+      console.log(data);
+      setStations(data);
     } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : `Could not fetch timetable for station: ${station}`,
