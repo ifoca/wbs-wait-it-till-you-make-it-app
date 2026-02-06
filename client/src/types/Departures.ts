@@ -1,4 +1,4 @@
-export type Station = {
+export type Departures = {
   countdown: number | null;
   delay: string | null;
   date: string;
