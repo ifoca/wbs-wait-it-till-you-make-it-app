@@ -1,4 +1,10 @@
-const TimetableItem = ({ station }) => {
+import { type Station } from '../types/stations';
+
+type TimetableItemProps = {
+  station: Station;
+};
+
+const TimetableItem = ({ station }: TimetableItemProps) => {
   console.log(station);
   // TO do: add condition to render `cancelled` in the Delay column
   // if we have in the response: station.is_cancelled === 1
