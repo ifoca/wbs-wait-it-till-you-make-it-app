@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ErrorMessage, LoadingMessage, TimetableItem } from '../components';
 import useErrorAndLoadingState from '../contexts/ErrorAndLoadingContext';
-import { type Station } from '../types/stations';
+import { type Departures } from '../types/Departures';
 
 const Results = () => {
-  const [stations, setStations] = useState<Station[]>([]);
+  const [stations, setStations] = useState<Departures[]>([]);
   const { error, setError, loading, setLoading } = useErrorAndLoadingState();
 
   const { city, station } = useParams();

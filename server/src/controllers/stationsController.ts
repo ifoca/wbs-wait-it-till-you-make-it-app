@@ -2,6 +2,8 @@ import type { RequestHandler } from 'express';
 import { Stations } from '#models';
 import { normalizeGermanText } from '#utils';
 import { DEPARTURES_API } from '#config';
+import type { DeparturesResponse } from '#types';
+// import type { StationsSchema } from '#schemas';
 
 // Get all cities
 export const getCities: RequestHandler = async (req, res) => {
@@ -14,7 +16,7 @@ export const getCities: RequestHandler = async (req, res) => {
 };
 
 // Get Stations for a city
-export const getStationsByCity: RequestHandler = async (req, res) => {
+export const getStationsByCity: RequestHandler<{ cityName: string }> = async (req, res) => {
   const { cityName } = req.params;
 
   // Normalize the search query
@@ -100,10 +102,10 @@ export const getDepartures: RequestHandler = async (req, res) => {
     throw new Error('Could not get results from the external API');
   }
 
-  const departures = await apiResults.json();
-  console.log(departures);
+  const departures = (await apiResults.json()) as DeparturesResponse;
+
   if (departures.error) {
-    return res.status(404).json({ message: departures.error });
+    return res.status(404).json({ error: departures.error });
   }
   return res.status(200).json(departures.raw);
 };
