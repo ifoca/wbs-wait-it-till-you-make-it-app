@@ -1,13 +1,21 @@
 import express from 'express';
-import '#db';
 import cors from 'cors';
+import '#db';
 import { usersRouter, locationsRouter, favoritesRouter } from '#routes';
+import { CLIENT_BASE_URL } from '#config';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: CLIENT_BASE_URL,
+    credentials: true,
+  }),
+);
 
 //for Users/Authentication
 app.use('/auth/user', usersRouter);
