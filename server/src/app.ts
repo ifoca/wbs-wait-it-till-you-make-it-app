@@ -17,6 +17,7 @@ app.use('/auth/user', usersRouter);
 app.use('/locations', locationsRouter);
 //for users to manage their favorite stations
 app.use('/favorites', favoritesRouter);
+
 app.use(errorHandler)
 
 app.listen(port, () => console.log(`\x1b[34mMain app listening at port:${port}\x1b[0m`));

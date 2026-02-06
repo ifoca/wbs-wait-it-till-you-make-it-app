@@ -31,10 +31,10 @@ export const getUserById: RequestHandler = async (req, res) => {
 //post register user
 export const registerUser: RequestHandler = async (req, res) => {
   const { username, email, password } = req.body;
-  // email check using exist
+  // using email  to check exist
   const userAlreadyExists = await Users.exists({ email });
   if (userAlreadyExists) {
-    throw new Error('User already all have an account', { cause: 409 });
+    throw new Error('User already have an account', { cause: 409 });
   };
   const theSaltRounds = await bcrypt.genSalt(SALT_ROUNDS);
   const hashedPassword = await bcrypt.hash(password, theSaltRounds);
@@ -46,7 +46,7 @@ export const registerUser: RequestHandler = async (req, res) => {
   });
   const theUserToken = jwt.sign({USER_ID: user._id}, ACCESS_JWT_SECRET, { expiresIn: '10d' });
 
-// we need to to remove password from the response.
+ // to prevent the password from showing up
 // and we will use 'const userObj = user.toObject() as Partial<UserType>
 //delete userObj.password;
 
@@ -59,7 +59,7 @@ res.cookie('token', theUserToken, cookieOptions);
 export const loginUser:RequestHandler = async(req,res)=>{
   const {email,password} = req.body;
   const userAlreadyExists = await Users.exists({email});
- if (Users.length===0){
+ if (!userAlreadyExists){
   throw new Error ('email is not registered' ,{cause :404});
  }
   const user = await Users.findOne({email}).select('+password');
