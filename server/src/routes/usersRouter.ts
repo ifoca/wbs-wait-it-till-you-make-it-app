@@ -8,14 +8,16 @@ import {
   deleteUser,
 } from '#controllers';
 import { validateToken } from '#middleware';
+import  { loginSchema, registrationSchema } from '#schemas';
+import  { zodValidation } from '#middleware/zodValidation';
 
 const usersRouter = Router();
 
 // users
 usersRouter.get('/', getUsers);
 usersRouter.get('/:id', getUserById);
-usersRouter.post('/register', registerUser);
-usersRouter.post('/login', loginUser);
+usersRouter.post('/register',zodValidation(registrationSchema), registerUser);
+usersRouter.post('/login', zodValidation(loginSchema),loginUser);
 usersRouter.post('/logout', validateToken, logoutUser);
 usersRouter.delete('/:id', validateToken, deleteUser);
 
