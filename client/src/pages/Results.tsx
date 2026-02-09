@@ -16,7 +16,7 @@ const Results = () => {
     setError(null);
 
     const baseURL = import.meta.env.VITE_SERVER_API_URL;
-    console.log('Server base URL is: ', baseURL);
+    // console.log('Server base URL is: ', baseURL);
     try {
       const res = await fetch(`${baseURL}/locations/${city}/${station}/departures`);
       if (!res.ok) {

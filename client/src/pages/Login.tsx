@@ -1,14 +1,72 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useState, type FormEvent } from 'react';
+import { useErrorAndLoadingState, useAuthState } from '../contexts';
+import { ErrorMessage, LoadingMessage } from '../components';
 
 const Login = () => {
+  const { error, setError, loading, setLoading } = useErrorAndLoadingState();
+  const { authToken, setAuth } = useAuthState();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: FormEvent) => {
+    const apiBaseUrl = import.meta.env.VITE_SERVER_API_URL;
+    e.preventDefault();
+
+    try {
+      setError(null);
+      setLoading(true);
+      const res = await fetch(`${apiBaseUrl}/auth/user/login`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+        credentials: 'include',
+      });
+
+      if (!res.ok) {
+        throw new Error('Login failed!');
+      }
+
+      setAuth(true);
+      navigate('/user/profile'); // Navigate to profile page
+    } catch (error: unknown) {
+      const message = (error as { message: string }).message;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isDisabled = !email || !password;
+
   /* TO DO: 
   - check if the user is already logged in
     - if yes, redirect to homepage when they try to access the login page
   */
+
+  if (loading) {
+    return <LoadingMessage />;
+  }
+
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
+
+  if (authToken) {
+    return <p>I am logged in</p>;
+  }
+
   return (
     <>
       <div>
-        <form className="flex flex-col gap-8 items-center m-4 p-4">
+        <form onSubmit={handleLogin} className="flex flex-col gap-8 items-center m-4 p-4">
           <label className="input validator">
             <svg
               className="h-[1em] opacity-50"
@@ -26,7 +84,15 @@ const Login = () => {
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
               </g>
             </svg>
-            <input name="email" type="email" id="email" placeholder="mail@site.com" required />
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              type="email"
+              id="email"
+              placeholder="mail@site.com"
+              required
+            />
           </label>
           {/* TO DO: add error handling */}
           <div className="validator-hint hidden">Enter valid email address</div>
@@ -48,6 +114,8 @@ const Login = () => {
               </g>
             </svg>
             <input
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               name="password"
               type="password"
               id="password"
@@ -59,7 +127,11 @@ const Login = () => {
           </label>
           {/* TO DO: add error handling */}
           <p className="validator-hint hidden">Password must be at least 6 characters long.</p>
-          <button className="btn bg-neutral p-4" type="submit">
+          <button
+            className={`btn ${!isDisabled ? 'bg-neutral' : ''}`}
+            disabled={isDisabled}
+            type="submit"
+          >
             Log in
           </button>
         </form>

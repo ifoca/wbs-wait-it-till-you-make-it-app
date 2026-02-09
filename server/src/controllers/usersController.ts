@@ -2,13 +2,13 @@ import type { RequestHandler, CookieOptions } from 'express';
 import { Users } from '#models';
 import { ACCESS_JWT_SECRET, SALT_ROUNDS } from '#config';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { type JwtPayload } from 'jsonwebtoken';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const cookieOptions: CookieOptions = {
   httpOnly: true,
-  secure: isProduction,
-  sameSite: 'none',
+  secure: true,
+  sameSite: isProduction ? 'none' : 'lax',
 };
 
 // get all users
@@ -98,4 +98,23 @@ export const deleteUser: RequestHandler = async (req, res) => {
     throw new Error('User not registered or found', { cause: 404 });
   }
   return res.status(200).json({ message: 'Account deleted successfully' });
+};
+
+export const getCurrentUser: RequestHandler = async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ message: 'Not authenticated' });
+  }
+
+  try {
+    const payload = jwt.verify(token, ACCESS_JWT_SECRET) as JwtPayload;
+    const user = await Users.findById(payload.USER_ID).select('-password');
+
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+    return res.status(200).json({ user });
+  } catch (error) {
+    return res.status(401).json({ message: 'Invalid token' });
+  }
 };

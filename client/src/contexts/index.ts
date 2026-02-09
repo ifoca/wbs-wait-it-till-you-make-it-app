@@ -1,4 +1,4 @@
-export { default as useAuth, AuthContext } from './AuthContext';
+export { default as useAuthState, AuthContext } from './AuthContext';
 export { default as AuthState } from './AuthState';
 export {
   default as useErrorAndLoadingState,
