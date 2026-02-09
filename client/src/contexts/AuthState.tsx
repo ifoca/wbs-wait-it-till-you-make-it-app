@@ -18,14 +18,11 @@ function AuthState({ children }: { children: React.ReactNode }) {
         });
 
         if (res.ok) {
-          console.log('Auth request is good');
           setAuthToken(true);
         } else {
-          console.log('Auth request is NOT good');
           setAuthToken(false);
         }
       } catch (error: unknown) {
-        console.error(error);
         const message = (error as { message: string }).message;
         setError(message);
       } finally {
