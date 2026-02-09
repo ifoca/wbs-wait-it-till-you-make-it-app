@@ -7,9 +7,10 @@ import {
   logoutUser,
   deleteUser,
   getCurrentUser,
+  updateUser,
 } from '#controllers';
 import { validateToken } from '#middleware';
-import  { loginSchema, registrationSchema } from '#schemas';
+import  { loginSchema, registrationSchema, updateUserSchema } from '#schemas';
 import  { zodValidation } from '#middleware';
 
 const usersRouter = Router();
@@ -22,5 +23,6 @@ usersRouter.post('/login', zodValidation(loginSchema),loginUser);
 usersRouter.post('/logout', validateToken, logoutUser);
 usersRouter.delete('/:id', validateToken, deleteUser);
 usersRouter.get('/current/me', validateToken, getCurrentUser);
+usersRouter.put('/:id', validateToken, zodValidation(updateUserSchema), updateUser);
 
 export default usersRouter;
