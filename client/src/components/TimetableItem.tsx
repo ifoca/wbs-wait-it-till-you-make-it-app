@@ -1,7 +1,7 @@
-import { type Station } from '../types/Departures';
+import { type Departures } from '../types/Departures';
 
 type TimetableItemProps = {
-  station: Station;
+  station: Departures;
 };
 
 const TimetableItem = ({ station }: TimetableItemProps) => {
