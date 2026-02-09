@@ -1,4 +1,4 @@
-import {z} from "zod"
+import {z} from "zod/v4"
 
  const usernameSchema = z.string({error: ' username must be a string'})
  const emailSchema = z.string({error: 'please input a valid  email'});

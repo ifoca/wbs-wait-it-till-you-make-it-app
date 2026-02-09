@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const stationsSchema = z.object({
   _id: z.instanceof(Types.ObjectId),

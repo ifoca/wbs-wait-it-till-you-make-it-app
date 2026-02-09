@@ -1,7 +1,7 @@
 import type { Request,Response,NextFunction } from "express";
-import type { ZodSchema } from "zod/v4";
+import  { z } from "zod";
 
-export const zodValidation =(schema:ZodSchema) => {
+export const zodValidation =(schema:z.ZodType) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req.body);
 
