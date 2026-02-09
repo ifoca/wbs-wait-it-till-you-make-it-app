@@ -37,6 +37,7 @@ function AuthState({ children }: { children: React.ReactNode }) {
     setAuthToken(isAuthenticated);
   };
 
+  // TO DO: check to move this somewhere else?
   const logout = async () => {
     await fetch(`${apiBaseUrl}/auth/logout`, {
       method: 'POST',

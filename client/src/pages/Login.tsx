@@ -59,6 +59,7 @@ const Login = () => {
     return <ErrorMessage error={error} />;
   }
 
+  // TO DO: implement logic to redirect somewhere else
   if (authToken) {
     return <p>I am logged in</p>;
   }
