@@ -1,18 +1,19 @@
 import { createContext, use } from 'react';
 
 export type AuthContextType = {
-  authToken: string | null;
-  setAuth: React.Dispatch<React.SetStateAction<string | null>>;
+  authToken: boolean;
+  setAuth: (isAuthenticated: boolean) => void;
+  logout: () => void;
 };
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const useAuth = () => {
+const useAuthState = () => {
   const context = use(AuthContext);
   if (!context) {
-    throw new Error('useAuth context does not exist in this component');
+    throw new Error('AuthContext does not exist in this component');
   }
   return context;
 };
 
-export default useAuth;
+export default useAuthState;

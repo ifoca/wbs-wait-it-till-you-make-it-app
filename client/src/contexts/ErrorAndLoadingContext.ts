@@ -14,7 +14,7 @@ export const ErrorAndLoadingContext = createContext<ErrorAndLoadingContextType |
 const useErrorAndLoadingState = () => {
   const context = use(ErrorAndLoadingContext);
   if (!context) {
-    throw new Error('ErrorAndLoadingContext context does not exist in this component');
+    throw new Error('ErrorAndLoadingContext does not exist in this component');
   }
   return context;
 };

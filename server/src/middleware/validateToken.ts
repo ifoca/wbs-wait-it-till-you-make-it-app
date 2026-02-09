@@ -17,4 +17,5 @@ export const validateToken: RequestHandler = async (req, res, next) => {
     return res.status(401).json({ message: 'invalid token, try to login again' });
   }
 };
+
 export default validateToken;
