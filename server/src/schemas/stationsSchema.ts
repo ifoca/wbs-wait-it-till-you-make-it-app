@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import { z } from 'zod/v4';
 
-export const stationsSchema = z.object({
+/*export const stationsSchema = z.object({
   _id: z.instanceof(Types.ObjectId),
   cityName: z
     .string({ error: 'cityName is required' })
@@ -19,3 +19,13 @@ export const stationsSchema = z.object({
 });
 
 export type StationsSchema = z.infer<typeof stationsSchema>;
+*/
+export const StationsSchema = z.object({
+  _id :z.instanceof(Types.ObjectId),
+  cityName:z.string({error: 'cityName is required'})
+                   .min(2,{error:' name needs to have at least 2 characters'}),
+  stationName:z.string({error: 'stationName is required'})
+                   .min(2,{error:' name needs to have at least 2 characters'}),
+ cityNameNormalization:z.string().optional(),
+  
+})
