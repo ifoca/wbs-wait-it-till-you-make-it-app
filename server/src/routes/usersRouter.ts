@@ -9,7 +9,7 @@ import {
 } from '#controllers';
 import { validateToken } from '#middleware';
 import  { loginSchema, registrationSchema } from '#schemas';
-import  { zodValidation } from '#middleware/zodValidation';
+import  { zodValidation } from '#middleware';
 
 const usersRouter = Router();
 
