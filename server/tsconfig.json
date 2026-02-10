@@ -26,5 +26,6 @@
       "#*": ["*"] // Defines internal path aliases with '#' to avoid conflict with '@'
     }
   },
-  "include": ["src"] // Files to include in compilation
+  "include": ["src"], // Files to include in compilation
+  "exclude": ["node_modules", "../client"]
 }

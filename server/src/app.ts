@@ -7,7 +7,7 @@ import { errorHandler } from '#middleware';
 import { CLIENT_BASE_URL } from '#config';
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json(), cookieParser());
 app.use(
@@ -25,4 +25,4 @@ app.use('/locations', locationsRouter);
 app.use('/favorites', favoritesRouter);
 app.use(errorHandler);
 
-app.listen(port, () => console.log(`\x1b[34mMain app listening at port:${port}\x1b[0m`));
+app.listen(PORT, () => console.log(`\x1b[34mMain app listening at port:${PORT}\x1b[0m`));
