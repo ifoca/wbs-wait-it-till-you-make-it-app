@@ -5,6 +5,7 @@
     "lib": ["ESNext"], // Includes modern ES features in the type system
     "target": "ESNext", // Sets the JavaScript version output
     "skipLibCheck": true, // Skips type checking of declaration files (*.d.ts)
+    "incremental": true,
     "allowJs": true, // Allows JavaScript files in the project
     "resolveJsonModule": true, // Allows importing JSON modules
     "moduleDetection": "force", // Treats all files as modules regardless of import/export
@@ -26,5 +27,6 @@
       "#*": ["*"] // Defines internal path aliases with '#' to avoid conflict with '@'
     }
   },
-  "include": ["src"] // Files to include in compilation
+  "include": ["src"], // Files to include in compilation
+  "exclude": ["node_modules", "../client", "dist", "**/*.spec.ts", "**/*.test.ts"]
 }
