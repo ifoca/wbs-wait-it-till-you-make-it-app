@@ -20,12 +20,19 @@ import { z } from 'zod/v4';
 
 export type StationsSchema = z.infer<typeof stationsSchema>;
 */
-export const StationsSchema = z.object({
-  _id :z.instanceof(Types.ObjectId),
-  cityName:z.string({error: 'cityName is required'})
-                   .min(2,{error:' name needs to have at least 2 characters'}),
-  stationName:z.string({error: 'stationName is required'})
-                   .min(2,{error:' name needs to have at least 2 characters'}),
+export const inputStationsSchema = z.object({
+cityName:z
+    .string({error: 'cityName is required'})
+    .min(2,{error:' name needs to have at least 2 characters'}),
+  stationName:z
+    .string({error: 'stationName is required'})
+    .min(2,{error:' name needs to have at least 2 characters'}),
  cityNameNormalization:z.string().optional(),
+ stationNameNormalization:z.string().optional(),
+ aliasNames:z.array(z.string()).optional(),
+ isVerified:z.boolean().optional(),
   
-})
+});
+export  const stationSchema = inputStationsSchema.extend ({
+  _id: z.instanceof(Types.ObjectId),
+});
