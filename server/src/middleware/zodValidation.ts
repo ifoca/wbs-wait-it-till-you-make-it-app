@@ -7,12 +7,10 @@ export const zodValidation = (schema: z.ZodType) => {
 
     if (!result.success) {
       return res.status(400).json({
-        message: 'validation failed',
-        detail: result.error,
+        message: 'Validation failed.',
+        errors: result.error.issues,
       });
     }
-
-    req.body = result.data;
     next();
   };
 };
