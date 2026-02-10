@@ -22,6 +22,8 @@ const Register = () => {
     confirmPassword: '',
   });
 
+  const isDisabled = true;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
@@ -30,8 +32,14 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      setError(null);
+      if (!username || !email || !password || !confirmPassword) {
+        throw new Error('All fields are required');
+      }
+      if (password !== confirmPassword) {
+        throw new Error('Passwords do not match');
+      }
       setLoading(true);
+
       const res = await fetch(`${apiBaseUrl}/auth/user/register`, {
         method: 'POST',
         headers: {
@@ -41,7 +49,6 @@ const Register = () => {
           username,
           email,
           password,
-          confirmPassword,
         }),
         credentials: 'include',
       });
@@ -104,7 +111,7 @@ const Register = () => {
             type="text"
             id="username"
             placeholder="Username"
-            required
+            // required
           />
         </label>
         <label className="input validator">
@@ -131,7 +138,7 @@ const Register = () => {
             type="email"
             id="email"
             placeholder="mail@site.com"
-            required
+            // required
           />
         </label>
         {/* TO DO: add error handling */}
@@ -159,7 +166,7 @@ const Register = () => {
             name="password"
             type="password"
             id="password"
-            required
+            // required
             placeholder="Password"
             // minLength={6}
             // pattern=".{6,}"
@@ -190,7 +197,7 @@ const Register = () => {
             name="confirmPassword"
             type="password"
             id="confirmPassword"
-            required
+            // required
             placeholder="Confirm Password"
             // minLength={6}
             // pattern=".{6,}"
@@ -198,7 +205,12 @@ const Register = () => {
         </label>
         {/* TO DO: add error handling */}
         <p className="validator-hint hidden">Passwords must match.</p>
-        <button className="btn bg-neutral p-4" type="submit">
+        <button
+          // className={`btn ${!isDisabled ? 'bg-neutral' : ''}`}
+          // disabled={isDisabled}
+          className="btn bg-neutral p-4"
+          type="submit"
+        >
           Register
         </button>
       </form>

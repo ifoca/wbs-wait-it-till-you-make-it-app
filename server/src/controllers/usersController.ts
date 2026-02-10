@@ -14,8 +14,8 @@ const cookieOptions: CookieOptions = {
 // get all users
 export const getUsers: RequestHandler = async (req, res) => {
   const users = await Users.find();
-  if (!users) {
-    throw new Error('Something went wrong, could not get users', { cause: 404 });
+  if (users.length === 0) {
+    throw new Error('Something went wrong, could not get users.', { cause: 404 });
   }
   return res.status(200).json(users);
 };
@@ -24,17 +24,18 @@ export const getUsers: RequestHandler = async (req, res) => {
 export const getUserById: RequestHandler = async (req, res) => {
   const user = await Users.findById(req.params.id);
   if (!user) {
-    throw new Error('User not found', { cause: 404 });
+    throw new Error('User not found.', { cause: 404 });
   }
   return res.status(200).json(user);
 };
-//post register user
+
+// post register user
 export const registerUser: RequestHandler = async (req, res) => {
   const { username, email, password } = req.body;
   // email check using exist
   const userAlreadyExists = await Users.exists({ email });
   if (userAlreadyExists) {
-    throw new Error('User already all have an account', { cause: 409 });
+    throw new Error('A user with this email already exists.', { cause: 409 });
   }
   const theSaltRounds = await bcrypt.genSalt(SALT_ROUNDS);
   const hashedPassword = await bcrypt.hash(password, theSaltRounds);
@@ -54,33 +55,29 @@ export const registerUser: RequestHandler = async (req, res) => {
 
   return res
     .status(201)
-    .json({ message: 'your account was successfully created', token: theUserToken });
+    .json({ message: 'Your account was successfully created.', token: theUserToken });
 };
 
-//post login user
+// post login user
 export const loginUser: RequestHandler = async (req, res) => {
   const { email, password } = req.body;
-  const userAlreadyExists = await Users.exists({ email });
-  if (Users.length === 0) {
-    throw new Error('email is not registered', { cause: 404 });
-  }
+
   const user = await Users.findOne({ email }).select('+password');
   if (!user) {
-    return res
-      .status(401)
-      .json({ message: 'invalid email or password, please create and account' });
+    return res.status(400).json({ message: 'Invalid email or password.' });
   }
   const isTheLoginPasswordValid = await bcrypt.compare(password, user.password);
   if (!isTheLoginPasswordValid) {
-    return res.status(400).json({ message: 'incorrect credentials ' });
+    return res.status(400).json({ message: 'Invalid email or password.' });
   }
+
   const theUserToken = jwt.sign({ USER_ID: user._id }, ACCESS_JWT_SECRET, { expiresIn: '10d' });
 
   res.cookie('token', theUserToken, cookieOptions);
   return res.status(200).json({ message: 'login successfully', token: theUserToken });
 };
 
-//post logout user
+// post logout user
 export const logoutUser: RequestHandler = async (req, res) => {
   res.clearCookie('token', cookieOptions);
   return res.status(200).json({ message: 'Logged out successfully' });
@@ -100,6 +97,7 @@ export const deleteUser: RequestHandler = async (req, res) => {
   return res.status(200).json({ message: 'Account deleted successfully' });
 };
 
+// get current user
 export const getCurrentUser: RequestHandler = async (req, res) => {
   const token = req.cookies.token;
   if (!token) {
