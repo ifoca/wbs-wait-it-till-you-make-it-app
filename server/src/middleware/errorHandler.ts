@@ -1,8 +1,9 @@
 import type { ErrorRequestHandler } from 'express';
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  console.log(err);
+  const statusCode = err.cause || 500;
+  const message = err.message || 'An unexpected error occurred';
 
-  res.status(500).json({ message: err.message });
+  res.status(statusCode).json({ message });
 };
 export default errorHandler;
