@@ -1,11 +1,85 @@
+import { useState, type FormEvent } from 'react';
+import { ErrorMessage, LoadingMessage } from '../components';
+import { useErrorAndLoadingState, useAuthState } from '../contexts';
+import { useNavigate } from 'react-router-dom';
+
+type RegisterFormState = {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
 const Register = () => {
+  const navigate = useNavigate();
+  const { error, setError, loading, setLoading } = useErrorAndLoadingState();
+  const { authToken, setAuth } = useAuthState();
+
+  const [{ username, email, password, confirmPassword }, setForm] = useState<RegisterFormState>({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+
+  const handleRegistration = async (e: FormEvent) => {
+    const apiBaseUrl = import.meta.env.VITE_SERVER_API_URL;
+    e.preventDefault();
+
+    try {
+      setError(null);
+      setLoading(true);
+      const res = await fetch(`${apiBaseUrl}/auth/user/register`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          confirmPassword,
+        }),
+        credentials: 'include',
+      });
+
+      if (!res.ok) {
+        throw new Error('Registration failed!');
+      }
+
+      // setAuth(true);
+      navigate('/user/profile'); // Navigate to profile page
+    } catch (error: unknown) {
+      const message = (error as { message: string }).message;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <LoadingMessage />;
+  }
+
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
+
+  // TO DO: implement logic to redirect somewhere else
+  // if (authToken) {
+  //   return <p>I am logged in</p>;
+  // }
+
   return (
     /* TO DO: 
     - check if the user is already logged in
       - if yes, redirect to homepage when they try to access the register page
     */
     <div>
-      <form className="flex flex-col gap-8 items-center m-4 p-4">
+      <form onSubmit={handleRegistration} className="flex flex-col gap-8 items-center m-4 p-4">
         <label className="input validator">
           <svg
             className="h-[1em] opacity-50"
@@ -23,7 +97,15 @@ const Register = () => {
               <circle cx="12" cy="7" r="4"></circle>
             </g>
           </svg>
-          <input name="username" type="text" id="username" placeholder="Username" required />
+          <input
+            value={username}
+            onChange={handleChange}
+            name="username"
+            type="text"
+            id="username"
+            placeholder="Username"
+            required
+          />
         </label>
         <label className="input validator">
           <svg
@@ -42,7 +124,15 @@ const Register = () => {
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
             </g>
           </svg>
-          <input name="email" type="email" id="email" placeholder="mail@site.com" required />
+          <input
+            value={email}
+            onChange={handleChange}
+            name="email"
+            type="email"
+            id="email"
+            placeholder="mail@site.com"
+            required
+          />
         </label>
         {/* TO DO: add error handling */}
         <p className="validator-hint hidden">Enter valid email address</p>
@@ -64,6 +154,8 @@ const Register = () => {
             </g>
           </svg>
           <input
+            value={password}
+            onChange={handleChange}
             name="password"
             type="password"
             id="password"
@@ -93,6 +185,8 @@ const Register = () => {
             </g>
           </svg>
           <input
+            value={confirmPassword}
+            onChange={handleChange}
             name="confirmPassword"
             type="password"
             id="confirmPassword"
