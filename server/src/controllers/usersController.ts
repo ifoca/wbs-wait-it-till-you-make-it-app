@@ -118,3 +118,17 @@ export const getCurrentUser: RequestHandler = async (req, res) => {
     return res.status(401).json({ message: 'Invalid token' });
   }
 };
+
+//to update user
+export const updateUser:RequestHandler =async(req, res)=>{
+  const userId = req.params.id;
+  const updateData =req.body;
+
+  const user =await Users.findById(userId);
+  if(!user){
+    return res.status(404).json({message:' user not found'})
+  }
+  Object.assign(user, updateData);
+  await user.save();
+  return res.status(200).json({ message: 'User updated successfully', user });
+};
