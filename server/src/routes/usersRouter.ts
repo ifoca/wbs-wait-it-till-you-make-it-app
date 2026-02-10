@@ -7,7 +7,6 @@ import {
   logoutUser,
   deleteUser,
   getCurrentUser,
-  updateUser,
 } from '#controllers';
 import { validateToken } from '#middleware';
 import { loginSchema, registrationSchema } from '#schemas';
