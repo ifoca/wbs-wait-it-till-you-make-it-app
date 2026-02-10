@@ -32,7 +32,7 @@ cityName:z
  aliasNames:z.array(z.string()).optional(),
  isVerified:z.boolean().optional(),
   
-});
+}).strict();
 export  const stationSchema = inputStationsSchema.extend ({
   _id: z.instanceof(Types.ObjectId),
 });

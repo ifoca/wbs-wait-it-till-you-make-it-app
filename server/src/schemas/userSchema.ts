@@ -21,7 +21,7 @@ import {z} from "zod/v4"
  })
  .strict()
 
- export const updateUserSchema = z
+ /*export const updateUserSchema = z
     .object({
        username: usernameSchema.optional(),
        email: emailSchema.optional(),
@@ -30,4 +30,4 @@ import {z} from "zod/v4"
     .strict()
     .refine((data) => Object.keys(data).length > 0, {
        message: 'At least one field must be provided',
-    });
+    });*/
