@@ -21,6 +21,7 @@ usersRouter.post('/register', zodValidation(registrationSchema), registerUser);
 usersRouter.post('/login', zodValidation(loginSchema), loginUser);
 usersRouter.post('/logout', validateToken, logoutUser);
 usersRouter.delete('/:id', validateToken, deleteUser);
-usersRouter.get('/current/me', getCurrentUser);
+usersRouter.get('/current/me', validateToken, getCurrentUser);
+// usersRouter.put('/:id', validateToken, zodValidation(updateUserSchema), updateUser);
 
 export default usersRouter;
