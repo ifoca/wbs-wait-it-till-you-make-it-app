@@ -1,9 +1,12 @@
-import { Types } from 'mongoose';
+import { Types, isValidObjectId } from 'mongoose';
 import { z } from 'zod/v4';
 
 export const favoriteSchema = z.object({
   _id: z.instanceof(Types.ObjectId),
-  userId: z.string({ error: 'user_id is required' }).min(1, { error: 'user_id must not be empty' }),
+  userId: z
+    .string({ error: 'user_id is required' })
+    .min(1, { error: 'user_id must not be empty' })
+    .refine(isValidObjectId, { message: 'Invalid User ID' }),
 
   stationId: z
     .string({ error: 'Station Id is required' })

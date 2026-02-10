@@ -1,28 +1,68 @@
 import type { RequestHandler } from 'express';
-import { Favorites, Users } from '#models';
+import { Favorites, Stations, Users } from '#models';
 
 // Add favorite station
+// export const addFavorite: RequestHandler = async (req, res) => {
+//   try {
+//     const { userId, stationId, nickName } = req.body;
+//     // if already on the favorites list
+//     const existingFavorite = await Favorites.findOne({ userId, stationId });
+//     if (existingFavorite) {
+//       return res.status(400).json({ message: 'Station already in the favorites list' });
+//     }
+//     // creating a new favorite
+//     const favorites = await Favorites.create({ userId, stationId, nickname: nickName });
+//     return res.status(201).json({ message: 'Station added to the favorite list' });
+//   } catch (error) {
+//     return res.status(500).json({ message: 'server error,please try again later' });
+//   }
+// };
+
 export const addFavorite: RequestHandler = async (req, res) => {
-  try {
-    const { userId, stationId, nickName } = req.body;
-    // if already on the favorites list
-    const existingFavorite = await Favorites.findOne({ userId, stationId });
-    if (existingFavorite) {
-      return res.status(400).json({ message: 'Station already in the favorites list' });
-    }
-    // creating a new favorite
-    const favorites = await Favorites.create({ userId, stationId, nickname: nickName });
-    return res.status(201).json({ message: 'Station added to the favorite list' });
-  } catch (error) {
-    return res.status(500).json({ message: 'server error,please try again later' });
+  const { userId } = req.params;
+  const { stationId, nickname } = req.body;
+
+  const user = await Users.findById(userId);
+  if (!user) {
+    throw new Error('User not found.', { cause: 404 });
   }
+
+  // Check if station id exists
+  const stationExists = await Stations.findById(stationId);
+  if (!stationExists) {
+    throw new Error('Station not found.', { cause: 404 });
+  }
+
+  // Check if favorite already exists
+  const existingFavorite = await Favorites.findOne({
+    userId,
+    stationId,
+  });
+
+  if (existingFavorite) {
+    return res.status(409).json({
+      message: 'Station already in favorites',
+    });
+  }
+
+  // Create favorite
+  const newFavorite = await Favorites.create({
+    userId: userId,
+    stationId: stationId,
+    nickname: nickname,
+  });
+
+  // Return with populated station
+  const populatedFavorite = await Favorites.findById(newFavorite._id).populate('stationId');
+
+  return res.status(201).json(populatedFavorite);
 };
 
 // Get all favorite stations for a user
 export const getFavoritesByUser: RequestHandler = async (req, res) => {
   const { userId } = req.params;
 
-  const user = await Users.findById(req.params.id);
+  const user = await Users.findById(userId);
   if (!user) {
     throw new Error('User not found.', { cause: 404 });
   }
