@@ -1,8 +1,7 @@
 import type { RequestHandler } from 'express';
-import { Favorites } from '#models';
+import { Favorites, Users } from '#models';
 
-// To Add a station to favorites
-//Post the favorite station
+// Add favorite station
 export const addFavorite: RequestHandler = async (req, res) => {
   try {
     const { userId, stationId, nickName } = req.body;
@@ -19,18 +18,22 @@ export const addFavorite: RequestHandler = async (req, res) => {
   }
 };
 
-// Get all favorite stations  for a user
+// Get all favorite stations for a user
 export const getFavoritesByUser: RequestHandler = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const favorites = await Favorites.find({ userId }).populate('stationId');
-    return res.status(200).json(favorites);
-  } catch (error) {
-    return res.status(500).json({ message: 'server error, please try again later' });
+  const { userId } = req.params;
+
+  const user = await Users.findById(req.params.id);
+  if (!user) {
+    throw new Error('User not found.', { cause: 404 });
   }
+  const favorites = await Favorites.find({ userId }).populate('stationId');
+  if (favorites.length === 0) {
+    throw new Error(`No favorites found for user: ${user.username}`, { cause: 404 });
+  }
+  return res.status(200).json(favorites);
 };
 
-//Delete a favorite station
+// Delete a favorite station
 export const deleteFavorite: RequestHandler = async (req, res) => {
   try {
     const { userId, stationId } = req.params;
