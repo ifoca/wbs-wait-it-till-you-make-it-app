@@ -21,25 +21,5 @@ export const loginSchema = z
   })
   .strict();
 
-<<<<<<< HEAD
-
- export const loginSchema = z.object({
-    email:emailSchema,
-    password:passwordSchema
- })
- .strict()
-
- /*export const updateUserSchema = z
-    .object({
-       username: usernameSchema.optional(),
-       email: emailSchema.optional(),
-       password: passwordSchema.optional(),
-    })
-    .strict()
-    .refine((data) => Object.keys(data).length > 0, {
-       message: 'At least one field must be provided',
-    });*/
-=======
 export type RegistrationSchema = z.infer<typeof registrationSchema>;
 export type LoginSchema = z.infer<typeof loginSchema>;
->>>>>>> 416a4e244cd373574f571f05d8f86ba9711f4fdd
