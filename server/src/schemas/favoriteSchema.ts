@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import { z } from 'zod/v4';
 
-export const favoriteInput = z.object({
+export const favoriteInputSchema = z.object({
   stationId: z
     .string({ error: 'Station Id is required' })
     .min(1, { error: 'Station Id must not be empty' }),
@@ -18,4 +18,4 @@ export const deleteFavoriteSchema = z.object({
     .min(1, { error: 'station id must not be empty' }),
 });
 
-export type FavoriteSchema = z.infer<typeof favoriteInput>;
+export type FavoriteSchema = z.infer<typeof favoriteInputSchema>;
