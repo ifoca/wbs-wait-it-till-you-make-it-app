@@ -13,7 +13,20 @@ export type Departures = {
   type: string;
 };
 
-export type Favorites = {
+export type Station = {
+  id: string;
+  cityName: string;
   stationName: string;
+  searchCount: number;
+};
+
+export type Favorite = {
+  stationId: Station;
   nickname: string | null;
+};
+
+export type User = {
+  id: string;
+  username: string;
+  email: string;
 };
