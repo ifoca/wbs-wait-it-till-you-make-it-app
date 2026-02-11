@@ -5,7 +5,7 @@ import { ErrorAndLoadingState, AuthState } from './contexts/index';
 import {
   Homepage,
   ErrorPage,
-  Results,
+  Departures,
   Login,
   Register,
   UserProfile,
@@ -23,7 +23,7 @@ function App() {
             <Routes>
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Homepage />} />
-                <Route path="/search/:city/:station" element={<Results />} />
+                <Route path="/search/:city/:station" element={<Departures />} />
               </Route>
               <Route path="user" element={<UserLayout />}>
                 <Route index element={<Login />} />
