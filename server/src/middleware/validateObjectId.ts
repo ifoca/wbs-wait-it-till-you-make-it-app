@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 
 export const validateObjectId = (paramName: string = 'id'): RequestHandler => {
   return (req, res, next) => {
-    const value = req.params[paramName];
+    const value = req.params[paramName] || req.body[paramName];
 
     if (typeof value !== 'string') {
       return res.status(400).json({
