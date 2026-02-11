@@ -21,5 +21,5 @@ export const loginSchema = z
   })
   .strict();
 
-export type RegistrationSchema = z.infer<typeof registrationSchema>;
-export type LoginSchema = z.infer<typeof loginSchema>;
+export const  RegistrationSchema = z.infer<typeof registrationSchema>;
+export const LoginSchema = z.infer<typeof loginSchema>;
