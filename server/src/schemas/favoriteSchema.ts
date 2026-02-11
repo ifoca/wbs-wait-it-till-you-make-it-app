@@ -1,20 +1,13 @@
-import { Types, isValidObjectId } from 'mongoose';
+import { Types } from 'mongoose';
 import { z } from 'zod/v4';
 
-export const favoriteSchema = z.object({
-  _id: z.instanceof(Types.ObjectId),
-  userId: z
-    .string({ error: 'user_id is required' })
-    .min(1, { error: 'user_id must not be empty' })
-    .refine(isValidObjectId, { message: 'Invalid User ID' }),
-
+export const favoriteInput = z.object({
   stationId: z
     .string({ error: 'Station Id is required' })
-    .min(1, { error: 'station id must not be empty' }),
+    .min(1, { error: 'Station Id must not be empty' }),
   nickname: z.string().trim().optional(),
-  order: z.number().int().optional(),
-  lastAccessed: z.date().optional(),
 });
+
 export const deleteFavoriteSchema = z.object({
   _id: z.instanceof(Types.ObjectId),
   user_id: z
@@ -25,4 +18,4 @@ export const deleteFavoriteSchema = z.object({
     .min(1, { error: 'station id must not be empty' }),
 });
 
-export type FavoriteSchema = z.infer<typeof favoriteSchema>;
+export type FavoriteSchema = z.infer<typeof favoriteInput>;
