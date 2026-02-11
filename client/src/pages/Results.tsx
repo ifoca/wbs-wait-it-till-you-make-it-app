@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ErrorMessage, LoadingMessage, TimetableItem } from '../components';
 import useErrorAndLoadingState from '../contexts/ErrorAndLoadingContext';
-import { type Departures } from '../types/Departures';
+import { type Departures } from '../types/index';
 
 const Results = () => {
   const [stations, setStations] = useState<Departures[]>([]);
