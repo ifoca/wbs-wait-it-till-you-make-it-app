@@ -3,38 +3,35 @@ import { useParams } from 'react-router-dom';
 import { ErrorMessage, LoadingMessage, TimetableItem } from '../components';
 import useErrorAndLoadingState from '../contexts/ErrorAndLoadingContext';
 import { type Departures } from '../types/index';
+import { useAuthState } from '../contexts';
 
 const Results = () => {
   const [stations, setStations] = useState<Departures[]>([]);
   const { error, setError, loading, setLoading } = useErrorAndLoadingState();
+  const { authToken, user } = useAuthState();
 
   const { city, station } = useParams();
-  console.log(city, station);
 
   const fetchResults = async () => {
     setLoading(true);
     setError(null);
 
     const baseURL = import.meta.env.VITE_SERVER_API_URL;
-    // console.log('Server base URL is: ', baseURL);
     try {
       const res = await fetch(`${baseURL}/locations/${city}/${station}/departures`);
       if (!res.ok) {
-        throw new Error(`Could not fetch the results`);
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Could not fetch departures`);
       }
 
       const data = await res.json();
       console.log(data);
-
-      if (data.error) {
-        console.log('I got an error, it is', data.error);
-        throw new Error(data.error);
-      }
-      console.log(data);
       setStations(data);
     } catch (err: unknown) {
       setError(
-        err instanceof Error ? err.message : `Could not fetch timetable for station: ${station}`,
+        err instanceof Error
+          ? `Could not fetch departures for "${station}" : ` + err.message
+          : `Could not fetch departures for: "${station}" `,
       );
     } finally {
       setLoading(false);
@@ -73,7 +70,7 @@ const Results = () => {
             </thead>
             <tbody>
               {stations.map((station) => (
-                <TimetableItem key={station.key} station={station} />
+                <TimetableItem key={station.key + station.countdown} station={station} />
               ))}
             </tbody>
             <tfoot>
@@ -93,6 +90,7 @@ const Results = () => {
           <p className="text-center text-lg p-2 mt-4">No results to be shown</p>
         </div>
       )}
+      {authToken && <button className="btn btn-xs mt-4">Save to favorite</button>}
     </>
   );
 };
