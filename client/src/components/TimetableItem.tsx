@@ -1,4 +1,4 @@
-import { type Departures } from '../types/Departures';
+import { type Departures } from '../types/index';
 
 type TimetableItemProps = {
   station: Departures;

@@ -1,9 +1,11 @@
 import { AuthContext } from './AuthContext';
 import { useEffect, useState } from 'react';
 import { useErrorAndLoadingState } from '../contexts';
+import { type User } from '../types/index';
 
 function AuthState({ children }: { children: React.ReactNode }) {
   const [authToken, setAuthToken] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
   const { setError, setLoading } = useErrorAndLoadingState();
 
   const apiBaseUrl = import.meta.env.VITE_SERVER_API_URL;
@@ -18,13 +20,24 @@ function AuthState({ children }: { children: React.ReactNode }) {
         });
 
         if (res.ok) {
+          const data = await res.json();
+          console.log(data);
+          const userData: User = {
+            id: data.user._id,
+            username: data.user.username,
+            email: data.user.email,
+          };
+          setUser(userData);
           setAuthToken(true);
         } else {
           setAuthToken(false);
+          setUser(null);
         }
       } catch (error: unknown) {
         const message = (error as { message: string }).message;
         setError(message);
+        setAuthToken(false);
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -44,10 +57,13 @@ function AuthState({ children }: { children: React.ReactNode }) {
       credentials: 'include',
     });
     setAuthToken(false);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ authToken, setAuth, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ authToken, user, setAuth, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
 

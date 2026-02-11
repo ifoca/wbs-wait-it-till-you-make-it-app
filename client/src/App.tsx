@@ -1,8 +1,17 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { Footer, Navbar } from './components';
 import { MainLayout, UserLayout } from './layouts';
-import { Homepage, ErrorPage, Results, Login, Register, UserProfile, DeleteAccount } from './pages';
 import { ErrorAndLoadingState, AuthState } from './contexts/index';
+import {
+  Homepage,
+  ErrorPage,
+  Results,
+  Login,
+  Register,
+  UserProfile,
+  DeleteAccount,
+  FavoritesPage,
+} from './pages';
 
 function App() {
   return (
@@ -15,13 +24,13 @@ function App() {
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Homepage />} />
                 <Route path="/search/:city/:station" element={<Results />} />
-                <Route path="/favorites" element={<div>Favorites Page</div>} />
               </Route>
               <Route path="user" element={<UserLayout />}>
                 <Route index element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route path="profile" element={<UserProfile />} />
                 <Route path="delete" element={<DeleteAccount />} />
+                <Route path="favorites" element={<FavoritesPage />} />
               </Route>
               <Route path="*" element={<ErrorPage />} />
             </Routes>
