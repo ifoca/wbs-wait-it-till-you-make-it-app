@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ErrorMessage, LoadingMessage, TimetableItem } from '../components';
-import useErrorAndLoadingState from '../contexts/ErrorAndLoadingContext';
 import { type Departures } from '../types/index';
-import { useAuthState } from '../contexts';
+import { useAuthState, useErrorAndLoadingState } from '../contexts/index';
 
 const Results = () => {
   const [stations, setStations] = useState<Departures[]>([]);
@@ -41,6 +40,25 @@ const Results = () => {
   useEffect(() => {
     fetchResults();
   }, [city, station]);
+
+  // const addToFavorites = (item) => {
+  //   setCartItems((prevCart) => {
+  //     // Check if the item already exists
+  //     const existingItem = prevCart.find((i) => i.id === item.id);
+
+  //     let updatedCart;
+
+  //     if (existingItem) {
+  //       // Item exists, increment count
+  //       updatedCart = prevCart.map((i) => (i.id === item.id ? { ...i, count: i.count + 1 } : i));
+  //     } else {
+  //       // Item doesn't exist - add it with count 1
+  //       updatedCart = [...prevCart, { ...item, count: 1 }];
+  //     }
+  //     localStorage.setItem('myCart', JSON.stringify(updatedCart));
+  //     return updatedCart;
+  //   });
+  // };
 
   if (loading) {
     return <LoadingMessage />;

@@ -1,7 +1,8 @@
-export { default as useAuthState, AuthContext } from './AuthContext';
-export { default as AuthState } from './AuthState';
+export { default as useAuthState, AuthContext } from './auth/AuthContext';
+export { default as AuthState } from './auth/AuthState';
 export {
   default as useErrorAndLoadingState,
   ErrorAndLoadingContext,
-} from './ErrorAndLoadingContext';
-export { default as ErrorAndLoadingState } from './ErrorAndLoadingState';
+} from './errorAndLoading/ErrorAndLoadingContext';
+export { default as ErrorAndLoadingState } from './errorAndLoading/ErrorAndLoadingState';
+export { default as useFavoriteState, FavoriteContext } from './favorites/favoritesContext';

@@ -1,7 +1,7 @@
 import { AuthContext } from './AuthContext';
 import { useEffect, useState } from 'react';
-import { useErrorAndLoadingState } from '../contexts';
-import { type User } from '../types/index';
+import { useErrorAndLoadingState } from '..';
+import { type User } from '../../types/index';
 
 function AuthState({ children }: { children: React.ReactNode }) {
   const [authToken, setAuthToken] = useState<boolean>(false);
