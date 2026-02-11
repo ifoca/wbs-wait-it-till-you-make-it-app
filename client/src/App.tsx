@@ -14,7 +14,7 @@ function App() {
             <Routes>
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Homepage />} />
-                <Route path="/:city/:station" element={<Results />} />
+                <Route path="/search/:city/:station" element={<Results />} />
                 <Route path="/favorites" element={<div>Favorites Page</div>} />
               </Route>
               <Route path="user" element={<UserLayout />}>
