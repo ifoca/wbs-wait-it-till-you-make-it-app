@@ -4,6 +4,7 @@ import {
   FaUserPlus,
   FaSignInAlt,
   FaSignOutAlt,
+  FaStar,
 } from 'react-icons/fa'
 
 export const SidebarData = [
@@ -35,6 +36,12 @@ export const SidebarData = [
     title: 'logout',
     path: '/user/logout',
     icon: <FaSignOutAlt />,
+    cName: 'nav-text',
+  },
+  {
+    title: 'favorites',
+    path: '/user/favorites',
+    icon: <FaStar />,
     cName: 'nav-text',
   },
 ]

@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { SidebarData } from "./SidebarData";
+import { useAuthState } from "../contexts";
+
+
+
+
 const Navbar = () => {
   const [sideBaropen, setSidebaropen] = useState(false);
+  const {authToken, logout}= useAuthState();
   return (
     <div className="navbar bg-neutral shadow-sm">
       <div>
@@ -41,18 +47,44 @@ const Navbar = () => {
             tabIndex={0}
             className="absolute right-0 mt-3 w-56 rounded-box bg-neutral p-3 shadow-lg"
           >
-            {SidebarData.map((item) => (
+            {SidebarData.map((item) => {
+              if (!authToken){
+                if(item.title !== "Homepage" && 
+                   item.title !== "login" &&
+                   item.title !== "register"
+                ){
+                  return null
+                }
+                
+              }
+              if (authToken){
+                if (item.title !== "Homepage" && 
+                  item.title !== "favorites" &&
+                  item.title !== "userProfile" && 
+                  item.title !== "logout")
+       {
+                  return null;
+                }
+              }
+            
+            return (
               <li key={item.path} className={item.cName}>
                 <Link
                   to={item.path}
                   className="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-neutral-700"
-                  onClick={() => setSidebaropen(false)}
+                  onClick={() => {
+                    if (item.title === "logout") {
+                      logout();
+                    }
+                    setSidebaropen(false);
+                  }}
                 >
                   <span className="text-lg">{item.icon}</span>
                   <span className="capitalize">{item.title}</span>
                 </Link>
               </li>
-            ))}
+            );
+          })}
           </ul>
         )}
       </div>
