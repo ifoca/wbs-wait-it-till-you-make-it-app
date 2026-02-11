@@ -21,3 +21,5 @@ export const capitalizeFirstLetter = (text: string): string => {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   // To do: to handle multi-words text: Berliner Allee becomes Berliner allee now
 };
+
+// TO DO: save the name without umlauts as aliasNames

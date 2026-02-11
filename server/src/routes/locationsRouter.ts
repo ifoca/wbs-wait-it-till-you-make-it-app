@@ -1,15 +1,14 @@
 import { Router } from 'express';
 import { getCities, getStationsByCity, createStationForCity, getDepartures } from '#controllers';
 import { zodValidation } from '#middleware';
-import { inputStationsSchema } from '#schemas';
-
+import { stationInputSchema } from '#schemas';
 
 const locationsRouter = Router();
 
 //stations
 locationsRouter.get('/cities', getCities); // used for search suggestions
 locationsRouter.get('/:cityName/stations', getStationsByCity); // used for search suggestions
-locationsRouter.post('/add', zodValidation(inputStationsSchema), createStationForCity);
+locationsRouter.post('/add', zodValidation(stationInputSchema), createStationForCity);
 locationsRouter.get('/:cityName/:stationName/departures', getDepartures);
 
 // To do:

@@ -8,7 +8,7 @@ const SearchBar = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    navigate(`/${city}/${station}`);
+    navigate(`/search/${city}/${station}`);
   };
 
   const isDisabled = !city || !station;

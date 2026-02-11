@@ -56,7 +56,7 @@ export const createStationForCity: RequestHandler = async (req, res) => {
     });
     if (existingStation) {
       return res.status(409).json({
-        message: `Station "${stationName}" in "${cityName}" already exists`,
+        message: `Station ${stationName} in ${cityName} already exists`,
         station: existingStation,
       });
     }

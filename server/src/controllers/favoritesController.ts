@@ -1,36 +1,65 @@
 import type { RequestHandler } from 'express';
-import { Favorites } from '#models';
+import { Favorites, Stations, Users } from '#models';
 
-// To Add a station to favorites
-//Post the favorite station
-export const addFavorite: RequestHandler = async (req, res) => {
-  try {
-    const { userId, stationId, nickName } = req.body;
-    // if already on the favorites list
-    const existingFavorite = await Favorites.findOne({ userId, stationId });
-    if (existingFavorite) {
-      return res.status(400).json({ message: 'Station already in the favorites list' });
-    }
-    // creating a new favorite
-    const favorites = await Favorites.create({ userId, stationId, nickname: nickName });
-    return res.status(201).json({ message: 'Station added to the favorite list' });
-  } catch (error) {
-    return res.status(500).json({ message: 'server error,please try again later' });
-  }
-};
-
-// Get all favorite stations  for a user
+// Get all favorite stations for a user
 export const getFavoritesByUser: RequestHandler = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const favorites = await Favorites.find({ userId }).populate('stationId');
-    return res.status(200).json(favorites);
-  } catch (error) {
-    return res.status(500).json({ message: 'server error, please try again later' });
+  const { userId } = req.params;
+
+  const user = await Users.findById(userId);
+  if (!user) {
+    throw new Error('User not found.', { cause: 404 });
   }
+  const favorites = await Favorites.find({ userId }).populate('stationId');
+  if (favorites.length === 0) {
+    throw new Error(`No favorites found for user: ${user.username}`, { cause: 404 });
+  }
+  return res.status(200).json(favorites);
 };
 
-//Delete a favorite station
+// Add a favorite station to a user
+export const addFavorite: RequestHandler = async (req, res) => {
+  const { userId } = req.params;
+  const { stationId, nickname } = req.body;
+
+  const user = await Users.findById(userId);
+  if (!user) {
+    throw new Error('User not found.', { cause: 404 });
+  }
+
+  // Check if station is valid
+  const stationExists = await Stations.findById(stationId);
+  if (!stationExists) {
+    throw new Error('Station not found.', { cause: 404 });
+  }
+
+  // Check if favorite already exists
+  const existingFavorite = await Favorites.findOne({
+    userId,
+    stationId,
+  });
+
+  if (existingFavorite) {
+    return res.status(409).json({
+      message: 'Station already in favorites',
+    });
+  }
+
+  // Create favorite
+  const newFavorite = await Favorites.create({
+    userId: userId,
+    stationId: stationId,
+    nickname: nickname?.trim() || stationExists?.stationName,
+  });
+
+  // Return with populated station
+  const populatedFavorite = await Favorites.findById(newFavorite._id).populate('stationId');
+
+  return res.status(201).json(populatedFavorite);
+};
+
+// TO DO create PUT function to update station nickname
+
+// Delete a favorite for a user
 export const deleteFavorite: RequestHandler = async (req, res) => {
   try {
     const { userId, stationId } = req.params;
