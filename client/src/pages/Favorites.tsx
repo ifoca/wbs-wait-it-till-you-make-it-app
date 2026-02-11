@@ -9,11 +9,9 @@ const FavoritesPage = () => {
   const navigate = useNavigate();
   const { error, setError, loading, setLoading } = useErrorAndLoadingState();
   const { authToken, user } = useAuthState();
-  const [favorites, setFavorites] = useState<Favorite[]>([
-    // { stationName: 'FirstStation', nickname: 'Office' },
-  ]);
+  const [favorites, setFavorites] = useState<Favorite[]>([]);
   useEffect(() => {
-    // if (!user) return;
+    if (!user) return;
 
     const fetchFavorites = async () => {
       const apiBaseUrl = import.meta.env.VITE_SERVER_API_URL;
@@ -39,14 +37,6 @@ const FavoritesPage = () => {
     fetchFavorites();
   }, [user]);
 
-  // useState for getting the stations
-  // add conditional to display no favorites + go to homepage
-
-  // fetch the favorites
-  // check if the user is logged in
-  // if yes, get the user id
-  // use the id to create the request to get the favorites
-
   if (!authToken) {
     return (
       <div className="text-center p-8">
@@ -60,6 +50,10 @@ const FavoritesPage = () => {
 
   if (loading) {
     return <LoadingMessage />;
+  }
+
+  if (error) {
+    return <ErrorMessage error={error} />;
   }
 
   if (!favorites) {
