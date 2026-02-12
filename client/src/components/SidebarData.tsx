@@ -37,4 +37,11 @@ export const SidebarData = [
     icon: <FaSignOutAlt />,
     cName: 'nav-text',
   },
+  {
+    title:'favorites',
+    path:'/user/favorites',
+    icon:<FaHome />,
+    cName:'nav-text'
+  }
 ]
+
