@@ -23,13 +23,11 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
         setLoading(true);
         setError(null);
         const res = await fetch(`${apiBaseUrl}/favorites/${user.id}`);
-        if (!res.ok) {
-          throw new Error(`Could not fetch favorites.`);
+        if (res.ok) {
+          const favorites: Favorite[] = await res.json();
+          console.log(favorites);
+          setFavorites(favorites);
         }
-
-        const favorites: Favorite[] = await res.json();
-        console.log(favorites);
-        setFavorites(favorites);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : `Could not fetch your favorites.`);
       } finally {
@@ -42,15 +40,24 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
   const addFavorite = async (cityName: string, stationName: string) => {
     if (!user) return;
 
-    const res = await fetch(`${apiBaseUrl}/favorites/${user.id}`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cityName, stationName }),
-    });
-
-    const newFavorite = await res.json();
-    setFavorites((prev) => [...prev, newFavorite]);
+    try {
+      setLoading(true);
+      setError(null);
+      const res = await fetch(`${apiBaseUrl}/favorites/${user.id}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cityName, stationName }),
+      });
+      if (res.ok) {
+        const newFavorite = await res.json();
+        setFavorites((prev) => [...prev, newFavorite]);
+      }
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : `Could not add ${stationName} as favorite.`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const removeFavorite = async (id: string) => {
