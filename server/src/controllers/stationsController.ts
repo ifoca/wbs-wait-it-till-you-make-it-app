@@ -5,6 +5,16 @@ import { DEPARTURES_API } from '#config';
 import type { DeparturesResponse } from '#types';
 // import type { StationsSchema } from '#schemas';
 
+// Get all locations
+export const getAllLocations: RequestHandler = async (req, res) => {
+  const locations = await Stations.find({});
+
+  if (locations.length === 0) {
+    return res.status(404).json({ message: 'No locations found' });
+  }
+  return res.status(200).json(locations);
+};
+
 // Get all cities
 export const getCities: RequestHandler = async (req, res) => {
   const cities = await Stations.distinct('cityName');

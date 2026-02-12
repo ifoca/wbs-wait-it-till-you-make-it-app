@@ -19,7 +19,7 @@ export const getFavoritesByUser: RequestHandler = async (req, res) => {
 // Add a favorite station to a user
 export const addFavorite: RequestHandler = async (req, res) => {
   const { userId } = req.params;
-  const { stationId, nickname } = req.body;
+  const { cityName, stationName, nickname } = req.body;
 
   const user = await Users.findById(userId);
   if (!user) {
@@ -27,15 +27,15 @@ export const addFavorite: RequestHandler = async (req, res) => {
   }
 
   // Check if station is valid
-  const stationExists = await Stations.findById(stationId);
-  if (!stationExists) {
+  const station = await Stations.findOne({ cityName, stationName });
+  if (!station) {
     throw new Error('Station not found.', { cause: 404 });
   }
 
   // Check if favorite already exists
   const existingFavorite = await Favorites.findOne({
     userId,
-    stationId,
+    stationId: station._id,
   });
 
   if (existingFavorite) {
@@ -47,8 +47,8 @@ export const addFavorite: RequestHandler = async (req, res) => {
   // Create favorite
   const newFavorite = await Favorites.create({
     userId: userId,
-    stationId: stationId,
-    nickname: nickname?.trim() || stationExists?.stationName,
+    stationId: station._id,
+    nickname: nickname?.trim() || station?.stationName,
   });
 
   // Return with populated station

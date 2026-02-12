@@ -1,49 +1,50 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ErrorMessage, LoadingMessage, TimetableItem } from '../components';
-import useErrorAndLoadingState from '../contexts/ErrorAndLoadingContext';
 import { type Departures } from '../types/index';
+import { useAuthState, useErrorAndLoadingState, useFavoritesState } from '../contexts/index';
 
 const Results = () => {
+  const { cityName, stationName } = useParams<{ cityName?: string; stationName?: string }>();
   const [stations, setStations] = useState<Departures[]>([]);
   const { error, setError, loading, setLoading } = useErrorAndLoadingState();
+  const { authToken } = useAuthState();
+  const { isFavorite, addFavorite } = useFavoritesState();
 
-  const { city, station } = useParams();
-  console.log(city, station);
+  useEffect(() => {
+    if (!cityName || !stationName) return;
+    fetchResults();
+  }, [cityName, stationName]);
+
+  if (!cityName || !stationName) {
+    return <ErrorMessage error="Missing route parameters: city or station" />;
+  }
 
   const fetchResults = async () => {
     setLoading(true);
     setError(null);
-
     const baseURL = import.meta.env.VITE_SERVER_API_URL;
-    // console.log('Server base URL is: ', baseURL);
     try {
-      const res = await fetch(`${baseURL}/locations/${city}/${station}/departures`);
+      const res = await fetch(`${baseURL}/locations/${cityName}/${stationName}/departures`);
       if (!res.ok) {
-        throw new Error(`Could not fetch the results`);
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Could not fetch departures`);
       }
 
       const data = await res.json();
-      console.log(data);
-
-      if (data.error) {
-        console.log('I got an error, it is', data.error);
-        throw new Error(data.error);
-      }
-      console.log(data);
       setStations(data);
     } catch (err: unknown) {
       setError(
-        err instanceof Error ? err.message : `Could not fetch timetable for station: ${station}`,
+        err instanceof Error
+          ? `Could not fetch departures for "${stationName}" : ` + err.message
+          : `Could not fetch departures for: "${stationName}" `,
       );
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchResults();
-  }, [city, station]);
+  const isAlreadySaved = isFavorite(cityName, stationName);
 
   if (loading) {
     return <LoadingMessage />;
@@ -56,7 +57,7 @@ const Results = () => {
   return (
     <>
       <h1 className="text-center m-2 p-2">
-        Your results for {city}, {station}:{' '}
+        Your results for {cityName}, {stationName}:{' '}
       </h1>
       {stations || !loading ? (
         <div className="overflow-x-auto h-96 w-96">
@@ -73,7 +74,7 @@ const Results = () => {
             </thead>
             <tbody>
               {stations.map((station) => (
-                <TimetableItem key={station.key} station={station} />
+                <TimetableItem key={station.key + station.countdown} station={station} />
               ))}
             </tbody>
             <tfoot>
@@ -92,6 +93,12 @@ const Results = () => {
         <div className="w-2/3 items-center m-auto">
           <p className="text-center text-lg p-2 mt-4">No results to be shown</p>
         </div>
+      )}
+
+      {authToken && !isAlreadySaved && cityName && stationName && (
+        <button onClick={() => addFavorite(cityName, stationName)} className="btn btn-xs mt-4">
+          Save to favorite
+        </button>
       )}
     </>
   );

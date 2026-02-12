@@ -1,5 +1,5 @@
 import { createContext, use } from 'react';
-import { type User } from '../types/index';
+import { type User } from '../../types/index';
 
 export type AuthContextType = {
   authToken: boolean;

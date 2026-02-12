@@ -2,9 +2,13 @@ import { Types } from 'mongoose';
 import { z } from 'zod/v4';
 
 export const favoriteInputSchema = z.object({
-  stationId: z
-    .string({ error: 'Station Id is required' })
-    .min(1, { error: 'Station Id must not be empty' }),
+  cityName: z
+    .string({ error: 'cityName is required' })
+    .min(1, { error: 'cityName must not be empty' }),
+  stationName: z
+    .string({ error: 'stationName is required' })
+    .min(1, { error: 'stationName must not be empty' }),
+
   nickname: z.string().trim().optional(),
 });
 
