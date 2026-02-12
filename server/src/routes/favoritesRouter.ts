@@ -9,7 +9,6 @@ favoritesRouter.get('/:userId', validateObjectId('userId'), getFavoritesByUser);
 favoritesRouter.post(
   '/:userId',
   validateObjectId('userId'),
-  validateObjectId('stationId'),
   zodValidation(favoriteInputSchema),
   addFavorite,
 );
