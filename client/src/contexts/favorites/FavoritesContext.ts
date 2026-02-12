@@ -6,17 +6,16 @@ type FavoritesContextType = {
   addFavorite: (city: string, station: string) => Promise<void>;
   removeFavorite: (id: string) => Promise<void>;
   isFavorite: (city: string, station: string) => boolean;
-  loading: boolean;
 };
 
-export const FavoriteContext = createContext<FavoritesContextType | undefined>(undefined);
+export const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
-const useFavoriteState = () => {
-  const context = use(FavoriteContext);
+const useFavoritesState = () => {
+  const context = use(FavoritesContext);
   if (!context) {
     throw new Error('FavoriteContext does not exist in this component');
   }
   return context;
 };
 
-export default useFavoriteState;
+export default useFavoritesState;

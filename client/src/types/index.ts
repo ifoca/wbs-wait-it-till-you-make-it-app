@@ -21,7 +21,7 @@ export type Station = {
 };
 
 export type Favorite = {
-  id: string;
+  _id: string;
   userId: string;
   stationId: Station;
   nickname: string | null;

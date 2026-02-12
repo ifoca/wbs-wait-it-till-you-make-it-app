@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { Footer, Navbar } from './components';
 import { MainLayout, UserLayout } from './layouts';
-import { ErrorAndLoadingState, AuthState } from './contexts/index';
+import { ErrorAndLoadingState, AuthState, FavoritesState } from './contexts/index';
 import {
   Homepage,
   ErrorPage,
@@ -18,24 +18,26 @@ function App() {
     <BrowserRouter>
       <ErrorAndLoadingState>
         <AuthState>
-          <div data-theme="aqua" className="flex flex-col min-h-screen">
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<MainLayout />}>
-                <Route index element={<Homepage />} />
-                <Route path="/search/:city/:station" element={<Departures />} />
-              </Route>
-              <Route path="user" element={<UserLayout />}>
-                <Route index element={<Login />} />
-                <Route path="register" element={<Register />} />
-                <Route path="profile" element={<UserProfile />} />
-                <Route path="delete" element={<DeleteAccount />} />
-                <Route path="favorites" element={<FavoritesPage />} />
-              </Route>
-              <Route path="*" element={<ErrorPage />} />
-            </Routes>
-            <Footer />
-          </div>
+          <FavoritesState>
+            <div data-theme="aqua" className="flex flex-col min-h-screen">
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<MainLayout />}>
+                  <Route index element={<Homepage />} />
+                  <Route path="/search/:city/:station" element={<Departures />} />
+                </Route>
+                <Route path="user" element={<UserLayout />}>
+                  <Route index element={<Login />} />
+                  <Route path="register" element={<Register />} />
+                  <Route path="profile" element={<UserProfile />} />
+                  <Route path="delete" element={<DeleteAccount />} />
+                  <Route path="favorites" element={<FavoritesPage />} />
+                </Route>
+                <Route path="*" element={<ErrorPage />} />
+              </Routes>
+              <Footer />
+            </div>
+          </FavoritesState>
         </AuthState>
       </ErrorAndLoadingState>
     </BrowserRouter>
