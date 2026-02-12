@@ -5,7 +5,7 @@ import { type Departures } from '../types/index';
 import { useAuthState, useErrorAndLoadingState, useFavoritesState } from '../contexts/index';
 
 const Results = () => {
-  const { cityName, stationName } = useParams<{ cityName?: string; stationName?: string }>();
+  const { cityName, stationName } = useParams<{ cityName: string; stationName: string }>();
   const [stations, setStations] = useState<Departures[]>([]);
   const { error, setError, loading, setLoading } = useErrorAndLoadingState();
   const { authToken } = useAuthState();
@@ -13,36 +13,49 @@ const Results = () => {
 
   useEffect(() => {
     if (!cityName || !stationName) return;
+
+    const fetchResults = async () => {
+      const apiBaseURL = import.meta.env.VITE_SERVER_API_URL;
+      try {
+        setLoading(true);
+        setError(null);
+        // Get departures for city / station
+        const res = await fetch(`${apiBaseURL}/locations/${cityName}/${stationName}/departures`);
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.error || `Could not fetch departures.`);
+        }
+
+        const data = await res.json();
+        setStations(data);
+
+        // If we get results, we have a valid city and station
+        // Save these to the database
+        await fetch(`${apiBaseURL}/locations/add`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            cityName,
+            stationName,
+          }),
+        });
+      } catch (err: unknown) {
+        setError(
+          err instanceof Error
+            ? `Could not fetch departures for "${cityName}, ${stationName}" : ` + err.message
+            : `Could not fetch departures for: "${cityName}, ${stationName}".`,
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchResults();
   }, [cityName, stationName]);
 
   if (!cityName || !stationName) {
     return <ErrorMessage error="Missing route parameters: city or station" />;
   }
-
-  const fetchResults = async () => {
-    setLoading(true);
-    setError(null);
-    const baseURL = import.meta.env.VITE_SERVER_API_URL;
-    try {
-      const res = await fetch(`${baseURL}/locations/${cityName}/${stationName}/departures`);
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || `Could not fetch departures`);
-      }
-
-      const data = await res.json();
-      setStations(data);
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? `Could not fetch departures for "${stationName}" : ` + err.message
-          : `Could not fetch departures for: "${stationName}" `,
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const isAlreadySaved = isFavorite(cityName, stationName);
 
