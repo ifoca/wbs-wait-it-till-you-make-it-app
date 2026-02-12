@@ -11,13 +11,11 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
 
   const apiBaseUrl = import.meta.env.VITE_SERVER_API_URL;
 
-  // Fetch favorites when user logs in
   useEffect(() => {
     if (!user) {
       setFavorites([]);
       return;
     }
-
     const fetchFavorites = async () => {
       const apiBaseUrl = import.meta.env.VITE_SERVER_API_URL;
 
@@ -38,27 +36,19 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
         setLoading(false);
       }
     };
-
-    // const fetchFavorites = async () => {
-    //   setLoading(true);
-    //   const res = await fetch(`${apiBaseUrl}/favorites/${user.id}`, {
-    //     credentials: 'include',
-    //   });
-    //   const data = await res.json();
-    //   setFavorites(data.favorites);
-    //   setLoading(false);
-    // };
-
     fetchFavorites();
   }, [user]);
 
-  const addFavorite = async (city: string, station: string) => {
-    const res = await fetch(`${apiBaseUrl}/favorites`, {
+  const addFavorite = async (cityName: string, stationName: string) => {
+    if (!user) return;
+
+    const res = await fetch(`${apiBaseUrl}/favorites/${user.id}`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ city, station }),
+      body: JSON.stringify({ cityName, stationName }),
     });
+
     const newFavorite = await res.json();
     setFavorites((prev) => [...prev, newFavorite]);
   };
@@ -71,8 +61,10 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
     setFavorites((prev) => prev.filter((fav) => fav._id !== id));
   };
 
-  const isFavorite = (id: string) => {
-    return favorites.some((fav) => fav._id === id);
+  const isFavorite = (cityName: string, stationName: string) => {
+    return favorites.some(
+      (fav) => fav.stationId.cityName === cityName && fav.stationId.stationName === stationName,
+    );
   };
 
   return (

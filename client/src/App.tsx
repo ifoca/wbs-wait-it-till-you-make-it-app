@@ -24,7 +24,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<MainLayout />}>
                   <Route index element={<Homepage />} />
-                  <Route path="/search/:city/:station" element={<Departures />} />
+                  <Route path="/search/:cityName/:stationName" element={<Departures />} />
                 </Route>
                 <Route path="user" element={<UserLayout />}>
                   <Route index element={<Login />} />

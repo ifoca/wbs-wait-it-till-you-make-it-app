@@ -2,63 +2,49 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ErrorMessage, LoadingMessage, TimetableItem } from '../components';
 import { type Departures } from '../types/index';
-import { useAuthState, useErrorAndLoadingState } from '../contexts/index';
+import { useAuthState, useErrorAndLoadingState, useFavoritesState } from '../contexts/index';
 
 const Results = () => {
+  const { cityName, stationName } = useParams<{ cityName?: string; stationName?: string }>();
   const [stations, setStations] = useState<Departures[]>([]);
   const { error, setError, loading, setLoading } = useErrorAndLoadingState();
-  const { authToken, user } = useAuthState();
+  const { authToken } = useAuthState();
+  const { isFavorite, addFavorite } = useFavoritesState();
 
-  const { city, station } = useParams();
+  useEffect(() => {
+    if (!cityName || !stationName) return;
+    fetchResults();
+  }, [cityName, stationName]);
+
+  if (!cityName || !stationName) {
+    return <ErrorMessage error="Missing route parameters: city or station" />;
+  }
 
   const fetchResults = async () => {
     setLoading(true);
     setError(null);
-
     const baseURL = import.meta.env.VITE_SERVER_API_URL;
     try {
-      const res = await fetch(`${baseURL}/locations/${city}/${station}/departures`);
+      const res = await fetch(`${baseURL}/locations/${cityName}/${stationName}/departures`);
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.error || `Could not fetch departures`);
       }
 
       const data = await res.json();
-      console.log(data);
       setStations(data);
     } catch (err: unknown) {
       setError(
         err instanceof Error
-          ? `Could not fetch departures for "${station}" : ` + err.message
-          : `Could not fetch departures for: "${station}" `,
+          ? `Could not fetch departures for "${stationName}" : ` + err.message
+          : `Could not fetch departures for: "${stationName}" `,
       );
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchResults();
-  }, [city, station]);
-
-  // const addToFavorites = (item) => {
-  //   setCartItems((prevCart) => {
-  //     // Check if the item already exists
-  //     const existingItem = prevCart.find((i) => i.id === item.id);
-
-  //     let updatedCart;
-
-  //     if (existingItem) {
-  //       // Item exists, increment count
-  //       updatedCart = prevCart.map((i) => (i.id === item.id ? { ...i, count: i.count + 1 } : i));
-  //     } else {
-  //       // Item doesn't exist - add it with count 1
-  //       updatedCart = [...prevCart, { ...item, count: 1 }];
-  //     }
-  //     localStorage.setItem('myCart', JSON.stringify(updatedCart));
-  //     return updatedCart;
-  //   });
-  // };
+  const isAlreadySaved = isFavorite(cityName, stationName);
 
   if (loading) {
     return <LoadingMessage />;
@@ -71,7 +57,7 @@ const Results = () => {
   return (
     <>
       <h1 className="text-center m-2 p-2">
-        Your results for {city}, {station}:{' '}
+        Your results for {cityName}, {stationName}:{' '}
       </h1>
       {stations || !loading ? (
         <div className="overflow-x-auto h-96 w-96">
@@ -108,7 +94,12 @@ const Results = () => {
           <p className="text-center text-lg p-2 mt-4">No results to be shown</p>
         </div>
       )}
-      {authToken && <button className="btn btn-xs mt-4">Save to favorite</button>}
+
+      {authToken && !isAlreadySaved && cityName && stationName && (
+        <button onClick={() => addFavorite(cityName, stationName)} className="btn btn-xs mt-4">
+          Save to favorite
+        </button>
+      )}
     </>
   );
 };
