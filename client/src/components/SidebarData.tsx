@@ -20,6 +20,12 @@ export const SidebarData = [
     cName: 'nav-text',
   },
   {
+    title: 'favorites',
+    path: '/user/favorites',
+    icon: <FaUser />,
+    cName: 'nav-text',
+  },
+  {
     title: 'register',
     path: '/user/register',
     icon: <FaUserPlus />,
@@ -33,7 +39,7 @@ export const SidebarData = [
   },
   {
     title: 'logout',
-    path: '/user/logout',
+    path: '/',
     icon: <FaSignOutAlt />,
     cName: 'nav-text',
   },
