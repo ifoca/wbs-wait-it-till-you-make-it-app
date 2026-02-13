@@ -1,5 +1,6 @@
 import type { RequestHandler } from 'express';
 import { Favorites, Stations, Users } from '#models';
+import { normalizeGermanText } from '#utils';
 
 // Get all favorite stations for a user
 export const getFavoritesByUser: RequestHandler = async (req, res) => {
@@ -26,8 +27,16 @@ export const addFavorite: RequestHandler = async (req, res) => {
     throw new Error('User not found.', { cause: 404 });
   }
 
+  // Normalize text to check for duplicates
+  const normalizedCity = normalizeGermanText(cityName);
+  const normalizedStation = normalizeGermanText(stationName);
+
   // Check if station is valid
-  const station = await Stations.findOne({ cityName, stationName });
+  const station = await Stations.findOne({
+    cityNameNormalized: normalizedCity,
+    stationNameNormalized: normalizedStation,
+  });
+
   if (!station) {
     throw new Error('Station not found.', { cause: 404 });
   }
