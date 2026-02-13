@@ -52,7 +52,7 @@ function AuthState({ children }: { children: React.ReactNode }) {
 
   // TO DO: check to move this somewhere else?
   const logout = async () => {
-    await fetch(`${apiBaseUrl}/auth/logout`, {
+    await fetch(`${apiBaseUrl}/auth/user/logout`, {
       method: 'POST',
       credentials: 'include',
     });
