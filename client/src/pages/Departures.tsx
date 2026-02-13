@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ErrorMessage, LoadingMessage, TimetableItem } from '../components';
 import { type Departures } from '../types/index';
 import { useAuthState, useErrorAndLoadingState, useFavoritesState } from '../contexts/index';
 
 const Results = () => {
+  const navigate = useNavigate();
   const { cityName, stationName } = useParams<{ cityName: string; stationName: string }>();
   const [stations, setStations] = useState<Departures[]>([]);
   const { error, setError, loading, setLoading } = useErrorAndLoadingState();
@@ -54,7 +55,20 @@ const Results = () => {
   }, [cityName, stationName, favorites]);
 
   if (!cityName || !stationName) {
-    return <ErrorMessage error="Missing route parameters: city or station" />;
+    return (
+      <>
+        <ErrorMessage error="Missing route parameters: city or station" />
+        <button
+          onClick={() => {
+            setError(null);
+            navigate('/');
+          }}
+          className="btn w-1/3 bg-base-300 text-neutral-content hover:bg-neutral"
+        >
+          Search again
+        </button>
+      </>
+    );
   }
 
   const isAlreadySaved = isFavorite(cityName, stationName);
@@ -64,7 +78,22 @@ const Results = () => {
   }
 
   if (error) {
-    return <ErrorMessage error={error} />;
+    return (
+      <>
+        <div className="flex flex-col gap-4 items-center">
+          <ErrorMessage error={error} />
+          <button
+            onClick={() => {
+              setError(null);
+              navigate('/');
+            }}
+            className="btn w-1/3 bg-base-300 text-neutral-content hover:bg-neutral"
+          >
+            Search again
+          </button>
+        </div>
+      </>
+    );
   }
 
   return (

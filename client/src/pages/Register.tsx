@@ -91,7 +91,7 @@ const Register = () => {
       <div>
         <form
           onSubmit={handleRegistration}
-          className="flex items-center flex-col gap-4 p-4 bg-base-300 text-neutral-content rounded-box"
+          className="flex items-center flex-col gap-6 p-4 bg-base-300 text-neutral-content rounded-box"
         >
           <h1 className="text-xl font-semibold">Sign up</h1>
           <label className="input validator">
