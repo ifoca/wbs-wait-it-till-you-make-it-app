@@ -15,7 +15,7 @@ const Navbar = () => {
     allowedSidebarData.includes(item.title),
   );
   return (
-    <div className="navbar bg-base-200 text-neutral-content">
+    <div className="navbar bg-base-300 text-neutral-content">
       <div>
         <img src="/src/static/assets/logo.png" alt="Logo" className="w-12 h-12" />
       </div>
@@ -25,7 +25,7 @@ const Navbar = () => {
       </div>
       <div className="flex-none">
         <button
-          className="btn btn-square btn-ghost"
+          className="btn btn-square btn-ghost hover:bg-base-100"
           onClick={() => setSidebaropen(!sideBaropen)}
           aria-expanded={sideBaropen}
           aria-controls="navbar-sidebar"
@@ -50,13 +50,13 @@ const Navbar = () => {
           <ul
             id="navbar-sidebar"
             tabIndex={0}
-            className="absolute bg-base-200 right-0 mt-3 w-56 rounded-box p-3 shadow-lg z-50"
+            className="absolute bg-base-300 right-0 mt-auto w-56 rounded-box p-2 shadow-lg z-50"
           >
             {displayedSidebarData.map((item) => (
               <li key={item.title} className={item.cName}>
                 <Link
                   to={item.path}
-                  className="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-base-300"
+                  className="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-base-100"
                   onClick={async (event) => {
                     if (item.title === 'Logout') {
                       event.preventDefault();

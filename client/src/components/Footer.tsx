@@ -2,7 +2,7 @@ import { NavLink } from 'react-router';
 
 const Footer = () => {
   return (
-    <footer className="footer bg-base-200 footer-horizontal footer-center text-neutral-content p-10">
+    <footer className="footer bg-base-300 footer-horizontal footer-center text-neutral-content p-10">
       <nav className="grid grid-flow-col gap-4">
         <div className="link link-hover">
           <NavLink to={'/'}>Home</NavLink>
