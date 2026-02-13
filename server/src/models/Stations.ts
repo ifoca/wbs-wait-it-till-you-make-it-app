@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { normalizeGermanText, capitalizeFirstLetter } from '#utils';
+import { normalizeGermanText, capitalizeCity } from '#utils';
 
 const stationsSchema = new Schema(
   {
@@ -41,11 +41,11 @@ const stationsSchema = new Schema(
 stationsSchema.pre('save', function () {
   // Only normalize if cityName or stationName changed
   if (this.isModified('cityName')) {
-    this.cityName = capitalizeFirstLetter(this.cityName);
+    this.cityName = capitalizeCity(this.cityName);
     this.cityNameNormalized = normalizeGermanText(this.cityName);
   }
   if (this.isModified('stationName')) {
-    this.stationName = capitalizeFirstLetter(this.stationName);
+    this.stationName = capitalizeCity(this.stationName);
     this.stationNameNormalized = normalizeGermanText(this.stationName);
   }
 });

@@ -17,9 +17,15 @@ Examples:
 
 // Standardize the text format
 // Capitalizes the first char and Lowercases all the chars starting with index 1
-export const capitalizeFirstLetter = (text: string): string => {
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-  // To do: to handle multi-words text: Berliner Allee becomes Berliner allee now
+export const capitalizeCity = (text: string): string => {
+  // Split by spaces and hyphens, capitalize each part
+  return text
+    .split(/(\s|-)/g)
+    .map((part) => {
+      if (part === ' ' || part === '-') return part;
+      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+    })
+    .join('');
 };
 
 // TO DO: save the name without umlauts as aliasNames
