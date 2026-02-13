@@ -76,7 +76,7 @@ const SearchBar = () => {
         </label>
         <button
           type="submit"
-          className={`w-24 bg-base-300  btn ${!isDisabled ? 'bg-base-300' : ''}`}
+          className={`w-24 bg-base-100  btn ${!isDisabled ? 'bg-base-100' : ''}`}
           disabled={isDisabled}
         >
           Search

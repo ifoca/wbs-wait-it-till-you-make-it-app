@@ -89,7 +89,11 @@ const Register = () => {
     <>
       {error && <ErrorMessage error={error} />}
       <div>
-        <form onSubmit={handleRegistration} className="flex flex-col gap-8 items-center m-4 p-4">
+        <form
+          onSubmit={handleRegistration}
+          className="flex items-center flex-col gap-4 p-4 bg-base-300 text-neutral-content rounded-box"
+        >
+          <h1 className="text-xl font-semibold">Sign up</h1>
           <label className="input validator">
             <svg
               className="h-[1em] opacity-50"
@@ -204,11 +208,11 @@ const Register = () => {
           </label>
           <p className="validator-hint hidden">Passwords must match.</p>
           <button
-            className={`btn ${!isDisabled ? 'bg-neutral' : ''}`}
+            className={`w-24 bg-base-100 btn ${!isDisabled ? 'bg-base-100' : ''}`}
             disabled={isDisabled}
             type="submit"
           >
-            Register
+            Submit
           </button>
         </form>
       </div>
