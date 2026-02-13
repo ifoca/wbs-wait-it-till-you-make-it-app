@@ -2,8 +2,9 @@ import { SearchBar } from '../components';
 const Homepage = () => {
   return (
     <>
-      <div>This is the homepage</div>
-      <SearchBar />
+      <div className="bg-base-300 rounded-box">
+        <SearchBar />
+      </div>
     </>
   );
 };

@@ -46,14 +46,17 @@ const FavoritesPage = () => {
 
   return (
     <>
-      <div className="overflow-x-auto h-96 w-96">
-        <table className="table table-xs table-pin-rows table-pin-cols">
+      <div className="overflow-x-auto h-96 w-96 bg-base-300 text-neutral-content rounded-box">
+        <h1 className="text-xl font-semibold text-neutral-content text-center p-4">
+          Your favorites at a glance
+        </h1>
+        <table className="table table-xs">
           <thead>
             <tr>
-              <td>Station name</td>
-              <td>Nickname</td>
-              <td></td>
-              <td></td>
+              <th>City</th>
+              <th>Station</th>
+              <th>See departures</th>
+              <th>Remove</th>
             </tr>
           </thead>
           <tbody>

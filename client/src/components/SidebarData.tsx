@@ -1,10 +1,4 @@
-import {
-  FaHome,
-  FaUser,
-  FaUserPlus,
-  FaSignInAlt,
-  FaSignOutAlt,
-} from 'react-icons/fa'
+import { FaHome, FaUser, FaSave, FaUserPlus, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 
 export const SidebarData = [
   {
@@ -14,33 +8,33 @@ export const SidebarData = [
     cName: 'nav-text',
   },
   {
-    title: 'userProfile',
+    title: 'User Profile',
     path: '/user/profile',
     icon: <FaUser />,
     cName: 'nav-text',
   },
   {
-    title: 'favorites',
+    title: 'Favorites',
     path: '/user/favorites',
-    icon: <FaUser />,
+    icon: <FaSave />,
     cName: 'nav-text',
   },
   {
-    title: 'register',
+    title: 'Register',
     path: '/user/register',
     icon: <FaUserPlus />,
     cName: 'nav-text',
   },
   {
-    title: 'login',
+    title: 'Login',
     path: '/user',
     icon: <FaSignInAlt />,
     cName: 'nav-text',
   },
   {
-    title: 'logout',
+    title: 'Logout',
     path: '/',
     icon: <FaSignOutAlt />,
     cName: 'nav-text',
   },
-]
+];

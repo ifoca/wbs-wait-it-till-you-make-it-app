@@ -9,7 +9,7 @@ const Results = () => {
   const [stations, setStations] = useState<Departures[]>([]);
   const { error, setError, loading, setLoading } = useErrorAndLoadingState();
   const { authToken } = useAuthState();
-  const { isFavorite, addFavorite } = useFavoritesState();
+  const { favorites, isFavorite, addFavorite } = useFavoritesState();
 
   useEffect(() => {
     if (!cityName || !stationName) return;
@@ -51,7 +51,7 @@ const Results = () => {
     };
 
     fetchResults();
-  }, [cityName, stationName]);
+  }, [cityName, stationName, favorites]);
 
   if (!cityName || !stationName) {
     return <ErrorMessage error="Missing route parameters: city or station" />;

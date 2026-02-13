@@ -81,7 +81,11 @@ const Login = () => {
     <>
       {error && <ErrorMessage error={error} />}
       <div>
-        <form onSubmit={handleLogin} className="flex flex-col gap-8 items-center m-4 p-4">
+        <form
+          onSubmit={handleLogin}
+          className="flex items-center flex-col gap-4 p-4 bg-base-300 text-neutral-content rounded-box"
+        >
+          <h1 className="text-xl font-semibold">Log in</h1>
           <label className="input validator">
             <svg
               className="h-[1em] opacity-50"
@@ -140,11 +144,11 @@ const Login = () => {
           </label>
           <p className="validator-hint hidden">Password must be at least 6 characters long.</p>
           <button
-            className={`btn ${!isDisabled ? 'bg-neutral' : ''}`}
+            className={`w-24 btn ${!isDisabled ? 'bg-base-100' : ''} hover:bg-neutral`}
             disabled={isDisabled}
             type="submit"
           >
-            Log in
+            Submit
           </button>
         </form>
         <div className="text-center">
