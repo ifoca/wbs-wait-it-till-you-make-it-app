@@ -1,18 +1,18 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { SidebarData } from "./SidebarData";
-import { useAuthState } from "../contexts";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { SidebarData } from './SidebarData';
+import { useAuthState } from '../contexts';
 
 const Navbar = () => {
   const [sideBaropen, setSidebaropen] = useState(false);
   const { authToken, logout } = useAuthState();
   const navigate = useNavigate();
   const allowedSidebarData = authToken
-    ? ["Homepage", "favorites", "userProfile", "logout"]
-    : ["Homepage", "login", "register"];
+    ? ['Homepage', 'Favorites', 'User Profile', 'Logout']
+    : ['Homepage', 'Login', 'Register'];
 
   const displayedSidebarData = SidebarData.filter((item) =>
-    allowedSidebarData.includes(item.title)
+    allowedSidebarData.includes(item.title),
   );
   return (
     <div className="navbar bg-neutral shadow-sm relative flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -52,16 +52,16 @@ const Navbar = () => {
           className="mt-2 w-full rounded-box bg-neutral p-3 shadow-lg sm:absolute sm:right-4 sm:top-full sm:mt-3 sm:w-56"
         >
           {displayedSidebarData.map((item) => (
-            <li key={item.path} className={item.cName}>
+            <li key={item.title} className={item.cName}>
               <Link
                 to={item.path}
                 className="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-neutral-700"
                 onClick={async (event) => {
-                  if (item.title === "logout") {
+                  if (item.title === 'Logout') {
                     event.preventDefault();
-                    await logout();
+                    logout();
                     setSidebaropen(false);
-                    navigate("/");
+                    navigate('/');
                     return;
                   }
                   setSidebaropen(false);
