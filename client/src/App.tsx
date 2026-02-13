@@ -16,10 +16,10 @@ import {
 function App() {
   return (
     <BrowserRouter>
-      <ErrorAndLoadingState>
-        <AuthState>
-          <FavoritesState>
-            <div data-theme="aqua" className="flex flex-col min-h-screen">
+      <div data-theme="aqua" className="flex flex-col min-h-screen">
+        <ErrorAndLoadingState>
+          <AuthState>
+            <FavoritesState>
               <Navbar />
               <Routes>
                 <Route path="/" element={<MainLayout />}>
@@ -36,10 +36,10 @@ function App() {
                 <Route path="*" element={<ErrorPage />} />
               </Routes>
               <Footer />
-            </div>
-          </FavoritesState>
-        </AuthState>
-      </ErrorAndLoadingState>
+            </FavoritesState>
+          </AuthState>
+        </ErrorAndLoadingState>
+      </div>
     </BrowserRouter>
   );
 }

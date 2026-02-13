@@ -15,9 +15,13 @@ const SearchBar = () => {
 
   return (
     <>
-      <h1 className="text-center p-4">Search for your station</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <label className="input">
+      <form
+        onSubmit={handleSubmit}
+        className="flex items-center flex-col gap-4 p-4 text-neutral-content"
+      >
+        <h1 className="text-xl font-semibold">Search for your station</h1>
+
+        <label className="input w-96">
           <svg
             className="h-[1em] opacity-50"
             xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +48,7 @@ const SearchBar = () => {
           />
         </label>
 
-        <label className="input">
+        <label className="input w-96">
           <svg
             className="h-[1em] opacity-50"
             xmlns="http://www.w3.org/2000/svg"
@@ -70,10 +74,9 @@ const SearchBar = () => {
             required
           />
         </label>
-        {/* Disable the button if the input fields are empty */}
         <button
           type="submit"
-          className={`btn ${!isDisabled ? 'bg-neutral' : ''}`}
+          className={`w-24 bg-base-300  btn ${!isDisabled ? 'bg-base-300' : ''}`}
           disabled={isDisabled}
         >
           Search

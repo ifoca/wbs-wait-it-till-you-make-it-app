@@ -15,13 +15,13 @@ const Navbar = () => {
     allowedSidebarData.includes(item.title),
   );
   return (
-    <div className="navbar bg-neutral shadow-sm">
+    <div className="navbar bg-base-200 text-neutral-content">
       <div>
         <img src="/src/static/assets/logo.png" alt="Logo" className="w-12 h-12" />
       </div>
       <div className="flex-1 mx-4">
-        <div className="text-2xl font-semibold">Some text</div>
-        <div className="text-xs font-light">Some smaller text</div>
+        <div className="text-2xl font-semibold">Wait it till you make it</div>
+        <div className="text-xs font-light">Tram and bus departure times</div>
       </div>
       <div className="flex-none">
         <button
@@ -50,13 +50,13 @@ const Navbar = () => {
           <ul
             id="navbar-sidebar"
             tabIndex={0}
-            className="absolute right-0 mt-3 w-56 rounded-box bg-neutral p-3 shadow-lg z-50"
+            className="absolute bg-base-200 right-0 mt-3 w-56 rounded-box p-3 shadow-lg z-50"
           >
             {displayedSidebarData.map((item) => (
               <li key={item.title} className={item.cName}>
                 <Link
                   to={item.path}
-                  className="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-neutral-700"
+                  className="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-base-300"
                   onClick={async (event) => {
                     if (item.title === 'Logout') {
                       event.preventDefault();
