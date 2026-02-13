@@ -39,7 +39,7 @@ export const SidebarData = [
   },
   {
     title: 'logout',
-    path: '/logout',
+    path: '/',
     icon: <FaSignOutAlt />,
     cName: 'nav-text',
   },
