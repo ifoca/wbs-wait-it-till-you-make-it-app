@@ -77,8 +77,8 @@ const Register = () => {
   if (authToken) {
     return (
       <div className="text-center p-8">
-        <p>You are already registered and logged in!</p>
-        <button onClick={() => navigate('/')} className="btn">
+        <p className="p-4">You are already registered and logged in!</p>
+        <button onClick={() => navigate('/')} className="btn bg-base-300 hover:bg-neutral">
           Go to Homepage
         </button>
       </div>
@@ -91,7 +91,7 @@ const Register = () => {
       <div>
         <form
           onSubmit={handleRegistration}
-          className="flex items-center flex-col gap-4 p-4 bg-base-300 text-neutral-content rounded-box"
+          className="flex items-center flex-col gap-6 p-4 bg-base-300 text-neutral-content rounded-box"
         >
           <h1 className="text-xl font-semibold">Sign up</h1>
           <label className="input validator">

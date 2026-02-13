@@ -1,6 +1,15 @@
-import { Outlet } from 'react-router';
+import { Outlet, useLocation } from 'react-router';
+import { useErrorAndLoadingState } from '../contexts';
+import { useEffect } from 'react';
 
 const UserLayout = () => {
+  const { setError } = useErrorAndLoadingState();
+  const location = useLocation();
+
+  useEffect(() => {
+    setError(null);
+  }, [location.pathname]);
+
   return (
     <div className="flex-1 bg-base-100 text-neutral-content">
       <div className="p-4 text-center">

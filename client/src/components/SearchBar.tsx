@@ -17,7 +17,7 @@ const SearchBar = () => {
     <>
       <form
         onSubmit={handleSubmit}
-        className="flex items-center flex-col gap-4 p-4 text-neutral-content"
+        className="flex items-center flex-col gap-6 p-4 text-neutral-content"
       >
         <h1 className="text-xl font-semibold">Search for your station</h1>
 

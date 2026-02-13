@@ -69,8 +69,8 @@ const Login = () => {
   if (authToken) {
     return (
       <div className="text-center p-8">
-        <p>You are already logged in!</p>
-        <button onClick={() => navigate('/')} className="btn">
+        <p className="p-4">You are already logged in!</p>
+        <button onClick={() => navigate('/')} className="btn bg-base-300 hover:bg-neutral">
           Go to Homepage
         </button>
       </div>
@@ -83,7 +83,7 @@ const Login = () => {
       <div>
         <form
           onSubmit={handleLogin}
-          className="flex items-center flex-col gap-4 p-4 bg-base-300 text-neutral-content rounded-box"
+          className="flex items-center flex-col gap-6 p-4 bg-base-300 text-neutral-content rounded-box"
         >
           <h1 className="text-xl font-semibold">Log in</h1>
           <label className="input validator">
@@ -144,7 +144,7 @@ const Login = () => {
           </label>
           <p className="validator-hint hidden">Password must be at least 6 characters long.</p>
           <button
-            className={`w-24 btn ${!isDisabled ? 'bg-base-100' : ''} hover:bg-neutral`}
+            className={`btn ${!isDisabled ? 'bg-base-100' : ''} hover:bg-neutral w-24`}
             disabled={isDisabled}
             type="submit"
           >
@@ -152,7 +152,7 @@ const Login = () => {
           </button>
         </form>
         <div className="text-center">
-          <p>
+          <p className="p-4">
             Don't have an account?{' '}
             <NavLink className="text-neutral-content underline" to={'/user/register'}>
               Register here
