@@ -208,7 +208,7 @@ const Register = () => {
           </label>
           <p className="validator-hint hidden">Passwords must match.</p>
           <button
-            className={`w-24 bg-base-100 btn ${!isDisabled ? 'bg-base-100' : ''}`}
+            className={`w-24 btn ${!isDisabled ? 'bg-base-100' : ''} hover:bg-neutral`}
             disabled={isDisabled}
             type="submit"
           >

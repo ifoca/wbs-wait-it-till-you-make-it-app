@@ -6,14 +6,14 @@ type FavoriteItemProps = {
 
 const FavoriteItem = ({ favorite }: FavoriteItemProps) => {
   return (
-    <tr>
+    <tr className="hover:bg-base-100">
+      <td>{favorite.stationId.cityName}</td>
       <td>{favorite.stationId.stationName}</td>
-      <td>{favorite.nickname}</td>
       <td>
-        <button className="btn btn-xs">Departures</button>
+        <button className="btn btn-xs hover:bg-base-300">Departures</button>
       </td>
       <td>
-        <button className="btn btn-xs">Remove</button>
+        <button className="btn btn-xs hover:bg-base-300">Remove</button>
       </td>
     </tr>
   );

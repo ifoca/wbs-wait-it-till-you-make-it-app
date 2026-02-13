@@ -144,7 +144,7 @@ const Login = () => {
           </label>
           <p className="validator-hint hidden">Password must be at least 6 characters long.</p>
           <button
-            className={`w-24 bg-base-100 btn ${!isDisabled ? 'bg-base-100' : ''}`}
+            className={`w-24 btn ${!isDisabled ? 'bg-base-100' : ''} hover:bg-neutral`}
             disabled={isDisabled}
             type="submit"
           >
