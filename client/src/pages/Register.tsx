@@ -77,8 +77,8 @@ const Register = () => {
   if (authToken) {
     return (
       <div className="text-center p-8">
-        <p>You are already registered and logged in!</p>
-        <button onClick={() => navigate('/')} className="btn">
+        <p className="p-4">You are already registered and logged in!</p>
+        <button onClick={() => navigate('/')} className="btn bg-base-300 hover:bg-neutral">
           Go to Homepage
         </button>
       </div>

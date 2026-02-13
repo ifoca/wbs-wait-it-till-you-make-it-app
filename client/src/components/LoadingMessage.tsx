@@ -1,7 +1,7 @@
 function LoadingMessage() {
   return (
-    <div className="m-auto w-2/3">
-      <p className="text-center text-lg p-2 mt-4 border">Loading...</p>
+    <div className="flex justify-center">
+      <span className="loading loading-spinner loading-xl p-4 m-4"></span>
     </div>
   );
 }
