@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { addFavorite, getFavoritesByUser, deleteFavorite } from '#controllers';
+import { addFavorite, getFavoritesByUser, deleteFavorite, deleteAllFavorites } from '#controllers';
 import { zodValidation, validateObjectId } from '#middleware';
-import { deleteFavoriteSchema, favoriteInputSchema } from '#schemas';
+import { favoriteInputSchema } from '#schemas';
 
 const favoritesRouter = Router();
 
@@ -12,11 +12,14 @@ favoritesRouter.post(
   zodValidation(favoriteInputSchema),
   addFavorite,
 );
-favoritesRouter.delete(
-  '/:favoriteId',
+favoritesRouter.delete( '/:userId/:stationId',validateObjectId('userId'),validateObjectId('stationId'), deleteFavorite);
+favoritesRouter.delete('/:userId',validateObjectId('userId'), deleteAllFavorites);
+
+
+
+  /*'/:favoriteId',
   validateObjectId('favoriteId'),
   zodValidation(deleteFavoriteSchema),
-  deleteFavorite,
-);
+  deleteFavorite,*/
 
 export default favoritesRouter;
