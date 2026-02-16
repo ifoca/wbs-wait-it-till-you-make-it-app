@@ -17,7 +17,7 @@ const TimetableItem = ({ station }: TimetableItemProps) => {
     return now.getHours() * 60 + now.getMinutes();
   };
 
-  const schedMinutes = getMinutesFromTime(station.sched_time);
+  const schedMinutes = getMinutesFromTime(station.time);
   const currentMinutes = getCurrentMinutes();
   const minutesUntil = schedMinutes - currentMinutes;
 
