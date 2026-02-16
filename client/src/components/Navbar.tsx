@@ -1,19 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SidebarData } from './SidebarData';
 import { useAuthState } from '../contexts';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const sidebarRef = useRef<HTMLUListElement>(null);
+
   const [sideBaropen, setSidebaropen] = useState(false);
   const { authToken, logout } = useAuthState();
-  const navigate = useNavigate();
   const allowedSidebarData = authToken
     ? ['Homepage', 'Favorites', 'User Profile', 'Logout']
     : ['Homepage', 'Login', 'Register'];
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setSidebaropen(false);
+      }
+    };
+
+    if (sideBaropen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [sideBaropen]);
+
   const displayedSidebarData = SidebarData.filter((item) =>
     allowedSidebarData.includes(item.title),
   );
+
   return (
     <div className="navbar bg-base-300 text-neutral-content">
       <div>
@@ -48,6 +67,7 @@ const Navbar = () => {
         </button>
         {sideBaropen && (
           <ul
+            ref={sidebarRef}
             id="navbar-sidebar"
             tabIndex={0}
             className="absolute bg-base-300 right-0 mt-auto w-56 rounded-box p-2 shadow-lg z-50"

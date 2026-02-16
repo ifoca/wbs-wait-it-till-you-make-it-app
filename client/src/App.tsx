@@ -1,11 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
-import { Footer, Navbar } from './components';
-import { MainLayout, UserLayout } from './layouts';
+import { Footer, Navbar, DeparturesList } from './components';
+import { MainLayout, UserLayout, DeparturesLayout } from './layouts';
 import { ErrorAndLoadingState, AuthState, FavoritesState } from './contexts/index';
 import {
   Homepage,
   ErrorPage,
-  Departures,
   Login,
   Register,
   UserProfile,
@@ -24,7 +23,9 @@ function App() {
               <Routes>
                 <Route path="/" element={<MainLayout />}>
                   <Route index element={<Homepage />} />
-                  <Route path="/search/:cityName/:stationName" element={<Departures />} />
+                </Route>
+                <Route path="/search" element={<DeparturesLayout />}>
+                  <Route path=":cityName/:stationName" element={<DeparturesList />} />
                 </Route>
                 <Route path="user" element={<UserLayout />}>
                   <Route index element={<Login />} />

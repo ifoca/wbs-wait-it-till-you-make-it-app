@@ -26,7 +26,6 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
         const res = await fetch(`${apiBaseUrl}/favorites/${user.id}`);
         if (res.ok) {
           const favorites: Favorite[] = await res.json();
-          console.log(favorites);
           setFavorites(favorites);
         }
       } catch (err: unknown) {
@@ -72,7 +71,6 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
   const isFavorite = (cityName: string, stationName: string) => {
     const normalizedCity = normalizeGermanText(cityName);
     const normalizedStation = normalizeGermanText(stationName);
-    console.log(normalizedCity, normalizedStation);
     return favorites.some(
       (fav) =>
         fav.stationId.cityNameNormalized === normalizedCity &&
