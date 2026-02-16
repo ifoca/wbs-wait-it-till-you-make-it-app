@@ -68,21 +68,36 @@ export const addFavorite: RequestHandler = async (req, res) => {
 
 // TO DO create PUT function to update station nickname
 
-// Delete a favorite for a user
-export const deleteFavorite: RequestHandler = async (req, res) => {
+// Delete one  favorite station from a user
+export const deleteOneFavorite: RequestHandler = async (req, res) => {
   try {
-    const { userId, stationId } = req.params;
-    const favorite = await Favorites.findOneAndDelete({ userId, stationId });
-    if (!favorite) {
-      return res.status(404).json({ message: 'favorite station not found or already deleted' });
+    const  {userId, favoriteId} =req.params;
+
+
+    const deleteOneFavorite  = await Favorites.findOneAndDelete({ userId, _id: favoriteId });
+    if (!deleteOneFavorite) {
+      return res.status(404).json({ message: 'favorite station not authorized to delete' });
     }
-    if (favorite) {
       return res.status(200).json({
         message:
           'you have remove the station from your favorites list and you can add it back again  whenever you want',
       });
-    }
-  } catch (error) {
+    }catch (error) {
     return res.status(500).json({ message: ' server error, failed to delete favorite station' });
+  }
+};
+ // Delete all favorite stations from a user
+ 
+ export const deleteAllFavorites:RequestHandler =async(req,res)=>{
+  try{
+    const {userId} =req.params;
+    const deleteAllFavorites = await Favorites.deleteMany({userId,});
+    if (deleteAllFavorites.deletedCount ===0) {
+      return  res.status(404).json({message: 'no favorite stations was found'});
+      }
+
+      return res.status(200).json({ message: 'all favorite stations have been removed '});
+    } catch(error){
+    return res.status(500).json({message: 'server error, failed to delete all favorite stations'})
   }
 };
