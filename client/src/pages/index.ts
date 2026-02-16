@@ -1,4 +1,3 @@
-export { default as Departures } from '../layouts/DeparturesLayout.tsx';
 export { default as Login } from './Login.tsx';
 export { default as Register } from './Register.tsx';
 export { default as UserProfile } from './UserProfile.tsx';
