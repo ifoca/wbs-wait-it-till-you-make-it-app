@@ -9,11 +9,13 @@ const DeparturesLayout = () => {
         <p className="text-sm px-4">Here we are going to add some text related to the search.</p>
       </div>
 
-      <div className="p-4">
+      <div className="flex flex-col gap-8 p-4">
         <div className="bg-base-300 rounded-box">
           <SearchBar />
         </div>
-        <Outlet />
+        <div>
+          <Outlet />
+        </div>
       </div>
     </div>
   );

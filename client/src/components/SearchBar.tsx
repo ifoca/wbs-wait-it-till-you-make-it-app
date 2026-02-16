@@ -21,7 +21,7 @@ const SearchBar = () => {
       >
         <h1 className="text-xl font-semibold">Search for your station</h1>
 
-        <label className="input w-96">
+        <label className="input w-max-96">
           <svg
             className="h-[1em] opacity-50"
             xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +48,7 @@ const SearchBar = () => {
           />
         </label>
 
-        <label className="input w-96">
+        <label className="input w-max-96">
           <svg
             className="h-[1em] opacity-50"
             xmlns="http://www.w3.org/2000/svg"
