@@ -59,14 +59,47 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
       setLoading(false);
     }
   };
+  //---
 
-  const removeFavorite = async (id: string) => {
-    await fetch(`${apiBaseUrl}/favorites/${id}`, {
-      method: 'DELETE',
-      credentials: 'include',
-    });
-    setFavorites((prev) => prev.filter((fav) => fav._id !== id));
+  const removeFavorite = async (favoriteId: string) => {
+    if (!user) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      await fetch(`${apiBaseUrl}/favorites/${user.id}/${favoriteId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      setFavorites((prev) => prev.filter((fav) => fav._id !== favoriteId));
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Could not remove favorite.');
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const removeAllFavorites = async () => {
+    if (!user) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+      await fetch(`${apiBaseUrl}/favorites/${user.id}/delete-All`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      setFavorites([]);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Could not remove all favorites.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
 
   const isFavorite = (cityName: string, stationName: string) => {
     const normalizedCity = normalizeGermanText(cityName);
@@ -79,7 +112,9 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <FavoritesContext.Provider value={{ favorites, addFavorite, removeFavorite, isFavorite }}>
+    <FavoritesContext.Provider
+      value={{ favorites, addFavorite, removeFavorite, removeAllFavorites, isFavorite }}
+    >
       {children}
     </FavoritesContext.Provider>
   );
