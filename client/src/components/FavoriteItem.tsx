@@ -1,6 +1,6 @@
 import type { Favorite } from '../types';
 import { useFavoritesState } from '../contexts';
-import DeparturesList from './DeparturesList';
+
 
 type FavoriteItemProps = {
   favorite: Favorite;
@@ -13,7 +13,7 @@ const FavoriteItem = ({ favorite }: FavoriteItemProps) => {
       <td>{favorite.stationId.cityName}</td>
       <td>{favorite.stationId.stationName}</td>
       <td>
-        <button className="btn btn-xs hover:bg-base-300" onClick={()=>DeparturesList}>Departures</button>
+        <button className="btn btn-xs hover:bg-base-300">Departures</button>
       </td>
       <td>
         <button className="btn btn-xs hover:bg-base-300"onClick={()=> removeFavorite(favorite._id)}>
