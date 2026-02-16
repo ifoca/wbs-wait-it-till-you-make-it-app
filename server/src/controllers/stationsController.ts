@@ -109,7 +109,18 @@ export const getDepartures: RequestHandler = async (req, res) => {
   if (departures.raw.length === 0) {
     return res.status(404).json({ error: `No departures found for ${cityName}, ${stationName}.` });
   }
-  return res.status(200).json(departures.raw);
+
+  // Filter past departures
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+  const futureDepartures = departures.raw.filter((dep: any) => {
+    const [hours, minutes] = dep.sched_time.split(':').map(Number);
+    const depMinutes = hours * 60 + minutes;
+    return depMinutes >= currentMinutes;
+  });
+
+  return res.status(200).json(futureDepartures);
 };
 
 // TO DO: add logic to hit the endpoint to make sure it is up and running

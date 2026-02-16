@@ -86,20 +86,19 @@ function DeparturesList() {
   return (
     <>
       <div className="flex-1 bg-base-100">
-        <h1 className="text-center m-2 p-2">
-          Your results for {cityName}, {stationName}:{' '}
+        <h1 ref={resultsRef} className="font-semibold text-center m-2 p-2">
+          Departures for {cityName}, {stationName}:{' '}
         </h1>
         {stations || !loading ? (
-          <div ref={resultsRef} className="overflow-x-auto h-96 w-96">
+          <div className="overflow-x-auto w-full mx-auto border rounded-box border-base-content/5 bg-base-300">
             <table className="table table-xs table-pin-rows table-pin-cols">
               <thead>
-                <tr>
-                  <td>Pl.</td>
-                  <td>Line</td>
-                  <td>To</td>
-                  <td>Planned</td>
-                  <td>New</td>
-                  <td>+/-</td>
+                <tr className="text-center">
+                  <td className="w-12">Pl.</td>
+                  <td className="w-16">Line</td>
+                  <td className="min-w-32">To</td>
+                  <td className="w-20">Dpt.</td>
+                  <td className="w-12">In</td>
                 </tr>
               </thead>
               <tbody>
@@ -107,21 +106,11 @@ function DeparturesList() {
                   <TimetableItem key={station.key + station.countdown} station={station} />
                 ))}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td>Pl.</td>
-                  <td>Line</td>
-                  <td>To</td>
-                  <td>Planned</td>
-                  <td>New</td>
-                  <td>+/-</td>
-                </tr>
-              </tfoot>
             </table>
           </div>
         ) : (
           <div className="w-2/3 items-center m-auto">
-            <p className="text-center text-lg p-2 mt-4">No results to be shown</p>
+            <p className="text-center text-lg p-2 mt-4">No departures could be displayed.</p>
           </div>
         )}
 
