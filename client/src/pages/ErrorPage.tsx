@@ -3,7 +3,9 @@ import { ErrorMessage } from '../components';
 function ErrorPage() {
   return (
     <>
-      <ErrorMessage error={'Page not found.'} />
+      <div className="m-auto">
+        <ErrorMessage error={'Page not found.'} />
+      </div>
     </>
   );
 }
