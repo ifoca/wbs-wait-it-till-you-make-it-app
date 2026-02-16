@@ -90,7 +90,7 @@ function DeparturesList() {
           Departures for {cityName}, {stationName}:{' '}
         </h3>
         <dialog id="departures_modal" className="modal ">
-          <div className="modal-box w-11/12 max-w-7xl h-5/6 bg-base-300">
+          <div className="modal-box w-screen max-w-none h-5/6 bg-base-300">
             <form method="dialog">
               <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
@@ -100,12 +100,12 @@ function DeparturesList() {
             <div className="overflow-auto h-full ">
               <table className="table table-xs table-pin-rows">
                 <thead>
-                  <tr>
-                    <td>Pl.</td>
-                    <td>Line</td>
-                    <td>To</td>
-                    <td>Dpt.</td>
-                    <td>In</td>
+                  <tr className="text-center">
+                    <td className="w-12">Pl.</td>
+                    <td className="w-16">Line</td>
+                    <td className="min-w-32">To</td>
+                    <td className="w-20">Dpt.</td>
+                    <td className="w-12">In</td>
                   </tr>
                 </thead>
                 <tbody>
@@ -117,6 +117,15 @@ function DeparturesList() {
                     ),
                   )}
                 </tbody>
+                <tfoot>
+                  <tr className="text-center">
+                    <td className="w-12">Pl.</td>
+                    <td className="w-16">Line</td>
+                    <td className="min-w-32">To</td>
+                    <td className="w-20">Dpt.</td>
+                    <td className="w-12">In</td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
           </div>
