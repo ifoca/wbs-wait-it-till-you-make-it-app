@@ -86,10 +86,15 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true);
       setError(null);
-      await fetch(`${apiBaseUrl}/favorites/${user.id}/delete-All`, {
+      const res = await fetch(`${apiBaseUrl}/favorites/${user.id}/delete-All`, {
         method: 'DELETE',
         credentials: 'include',
       });
+      if (!res.ok) {
+        const payload = await res.json().catch (()=>null);
+        setError(payload?.message || 'Could not remove all favorites.')
+     return;
+      }
       setFavorites([]);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Could not remove all favorites.');
@@ -97,9 +102,6 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
       setLoading(false);
     }
   };
-
-
-
 
   const isFavorite = (cityName: string, stationName: string) => {
     const normalizedCity = normalizeGermanText(cityName);
