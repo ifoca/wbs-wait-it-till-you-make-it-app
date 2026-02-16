@@ -21,18 +21,19 @@ const TimetableItem = ({ station }: TimetableItemProps) => {
   const currentMinutes = getCurrentMinutes();
   const minutesUntil = schedMinutes - currentMinutes;
 
+  const onTime = Number(station.delay) === 0 || station.delay === null;
+  const cancelled = station.is_cancelled === 1;
+  const isProblem = !onTime || cancelled;
+
   return (
     <>
-      <tr className="text-center">
+      <tr className={`text-center ${isProblem ? 'text-red-400' : 'text-green-400'}`}>
+        {' '}
         <td>{station.platform}</td>
         <td>{station.line}</td>
         <td className="whitespace-normal break-words">{station.destination}</td>
-        {station.delay === '0' || station.delay === null ? (
-          <td className="text-green-400">{station.sched_time}</td>
-        ) : (
-          <td className="text-red-400">{station.time}</td>
-        )}
-        {minutesUntil === 0 ? <td>Now</td> : <td>{minutesUntil} min</td>}
+        <td>{onTime ? station.sched_time : station.time}</td>
+        <td>{cancelled ? 'Off' : minutesUntil === 0 ? 'Now' : `${minutesUntil} min`}</td>
       </tr>
     </>
   );
