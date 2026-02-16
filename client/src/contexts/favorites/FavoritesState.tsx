@@ -3,6 +3,7 @@ import { FavoritesContext } from './FavoritesContext';
 import type { Favorite } from '../../types';
 import useErrorAndLoadingState from '../errorAndLoading/ErrorAndLoadingContext';
 import useAuthState from '../auth/AuthContext';
+import { normalizeGermanText } from '../../utils/normalize';
 
 function FavoritesState({ children }: { children: React.ReactNode }) {
   const { user } = useAuthState();
@@ -69,8 +70,13 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
   };
 
   const isFavorite = (cityName: string, stationName: string) => {
+    const normalizedCity = normalizeGermanText(cityName);
+    const normalizedStation = normalizeGermanText(stationName);
+    console.log(normalizedCity, normalizedStation);
     return favorites.some(
-      (fav) => fav.stationId.cityName === cityName && fav.stationId.stationName === stationName,
+      (fav) =>
+        fav.stationId.cityNameNormalized === normalizedCity &&
+        fav.stationId.stationNameNormalized === normalizedStation,
     );
   };
 
