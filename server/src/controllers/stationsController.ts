@@ -98,13 +98,16 @@ export const getDepartures: RequestHandler = async (req, res) => {
 
   const apiResults = await fetch(`${departuresApi}/${cityName}/${stationName}.json`);
   if (!apiResults.ok) {
-    throw new Error('Could not get results from the external API');
+    throw new Error('Could not get departures from the external API');
   }
 
   const departures = (await apiResults.json()) as DeparturesResponse;
 
-  if (departures.error) {
+  if (departures.error !== null) {
     return res.status(404).json({ error: departures.error });
+  }
+  if (departures.raw.length === 0) {
+    return res.status(404).json({ error: `No departures found for ${cityName}, ${stationName}.` });
   }
   return res.status(200).json(departures.raw);
 };
