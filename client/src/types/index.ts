@@ -17,6 +17,8 @@ export type Station = {
   id: string;
   cityName: string;
   stationName: string;
+  cityNameNormalized: string;
+  stationNameNormalized: string;
   searchCount: number;
 };
 
