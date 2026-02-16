@@ -13,7 +13,7 @@ favoritesRouter.post(
   addFavorite,
 );
 favoritesRouter.delete('/:userId/:favoriteId', validateObjectId('userId'), validateObjectId('favoriteId'), deleteOneFavorite);
-favoritesRouter.delete('/:userId', validateObjectId('userId'), deleteAllFavorites);
+favoritesRouter.delete('/:userId/delete-All', validateObjectId('userId'), deleteAllFavorites);
 
 
 
