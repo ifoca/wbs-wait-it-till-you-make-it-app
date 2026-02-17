@@ -6,6 +6,7 @@ import { useAuthState } from '../contexts';
 const Navbar = () => {
   const navigate = useNavigate();
   const sidebarRef = useRef<HTMLUListElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const [sideBaropen, setSidebaropen] = useState(false);
   const { authToken, logout } = useAuthState();
@@ -15,9 +16,16 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
-        setSidebaropen(false);
+      const target = event.target as Node;
+
+      if (
+        (sidebarRef.current && sidebarRef.current.contains(target)) ||
+        (buttonRef.current && buttonRef.current.contains(target))
+      ) {
+        return;
       }
+
+      setSidebaropen(false);
     };
 
     if (sideBaropen) {
@@ -44,6 +52,7 @@ const Navbar = () => {
       </div>
       <div className="flex-none">
         <button
+          ref={buttonRef}
           className="btn btn-square btn-ghost hover:bg-base-100"
           onClick={() => setSidebaropen(!sideBaropen)}
           aria-expanded={sideBaropen}
