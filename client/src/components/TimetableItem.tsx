@@ -27,7 +27,9 @@ const TimetableItem = ({ station }: TimetableItemProps) => {
 
   return (
     <>
-      <tr className={`text-center ${isProblem ? 'text-red-400' : 'text-green-400'}`}>
+      <tr
+        className={`text-center ${isProblem ? 'text-red-400' : 'text-green-400'} hover:bg-base-100`}
+      >
         <td>{station.platform}</td>
         <td>{station.line}</td>
         <td className="whitespace-normal break-words">{station.destination}</td>

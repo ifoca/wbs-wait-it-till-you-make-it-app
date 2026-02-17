@@ -78,7 +78,7 @@ const Register = () => {
     return (
       <div className="text-center p-8">
         <p className="p-4">You are already registered and logged in!</p>
-        <button onClick={() => navigate('/')} className="btn bg-base-300 hover:bg-neutral">
+        <button onClick={() => navigate('/')} className="btn btn-sm bg-base-300 hover:bg-neutral">
           Go to Homepage
         </button>
       </div>

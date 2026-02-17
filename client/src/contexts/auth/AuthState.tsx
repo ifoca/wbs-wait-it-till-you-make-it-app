@@ -35,28 +35,24 @@ function AuthState({ children }: { children: React.ReactNode }) {
     } catch (error: unknown) {
       const message = (error as { message: string }).message;
       setError(message);
-      setAuthToken(false);
-      setUser(null);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    void loadCurrentUser();
+    loadCurrentUser();
   }, []);
 
   const setAuth = (isAuthenticated: boolean) => {
     if (isAuthenticated) {
-      void loadCurrentUser();
+      loadCurrentUser();
       return;
     }
     setAuthToken(false);
     setUser(null);
   };
 
-
-  // TO DO: check to move this somewhere else?
   const logout = async () => {
     await fetch(`${apiBaseUrl}/auth/user/logout`, {
       method: 'POST',
