@@ -1,9 +1,11 @@
 import { useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const SearchBar = () => {
-  const [city, setCity] = useState('');
-  const [station, setStation] = useState('');
+  const { cityName, stationName } = useParams<{ cityName: string; stationName: string }>();
+
+  const [city, setCity] = useState(cityName || '');
+  const [station, setStation] = useState(stationName || '');
   const navigate = useNavigate();
 
   const handleSubmit = (e: FormEvent) => {

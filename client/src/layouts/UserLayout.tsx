@@ -18,8 +18,10 @@ const UserLayout = () => {
           Here we are going to implement the user authentication and profile management.
         </p>
       </div>
-      <div className="p-4">
-        <Outlet />
+      <div className="flex flex-col gap-8 p-4">
+        <div>
+          <Outlet />
+        </div>
       </div>
     </div>
   );
