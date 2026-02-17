@@ -7,6 +7,8 @@ import { ErrorMessage, LoadingMessage } from '../components';
 const FavoritesPage = () => {
   const navigate = useNavigate();
   const { error, loading } = useErrorAndLoadingState();
+  const { removeAllFavorites } = useFavoritesState();
+
   const { authToken, user } = useAuthState();
   const { favorites } = useFavoritesState();
 
@@ -33,7 +35,9 @@ const FavoritesPage = () => {
   }
 
   if (error) {
-    return <ErrorMessage error={error} />;
+    <div className="flex flex-col gap-4 items-center">
+      <ErrorMessage error={error} />
+    </div>;
   }
 
   if (favorites.length === 0) {
@@ -49,26 +53,40 @@ const FavoritesPage = () => {
 
   return (
     <>
-      <div className="overflow-x-auto h-96 w-96 bg-base-300 text-neutral-content rounded-box">
-        <h1 className="text-xl font-semibold text-neutral-content text-center p-4">
-          Your favorites at a glance
-        </h1>
-        <div className="flex justify-end px-4 pb-2"></div>
-        <table className="table table-xs">
-          <thead>
-            <tr>
-              <th>City</th>
-              <th>Station</th>
-              <th>See departures</th>
-              <th>Remove</th>
-            </tr>
-          </thead>
-          <tbody>
-            {favorites.map((favorite) => (
-              <FavoriteItem key={favorite._id} favorite={favorite} />
-            ))}
-          </tbody>
-        </table>
+      <div className="flex-1 bg-base-100">
+        <h3 className="font-semibold text-center m-2 p-2">Your saved stations at a glance</h3>
+        <div className="overflow-x-auto w-full mx-auto border rounded-box border-base-content/5 bg-base-300">
+          <table className="table table-xs table-pin-rows table-pin-cols">
+            <thead>
+              <tr className="text-center ">
+                <td className="w-32">City</td>
+                <td className="w-32">Station</td>
+                <td className="w-18">Search</td>
+                <td className="w-18">Remove</td>
+              </tr>
+            </thead>
+            <tbody>
+              {favorites.map((favorite) => (
+                <FavoriteItem key={favorite._id} favorite={favorite} />
+              ))}
+            </tbody>
+            <tfoot>
+              <tr className="text-center">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  <button
+                    className="btn btn-xs bg-base-300 text-neutral-content hover:bg-base-100"
+                    onClick={() => removeAllFavorites()}
+                  >
+                    Remove all
+                  </button>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
     </>
   );
