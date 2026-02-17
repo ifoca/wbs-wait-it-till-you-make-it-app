@@ -45,7 +45,12 @@ function AuthState({ children }: { children: React.ReactNode }) {
   }, []);
 
   const setAuth = (isAuthenticated: boolean) => {
-    setAuthToken(isAuthenticated);
+    if (isAuthenticated) {
+      loadCurrentUser();
+      return;
+    }
+    setAuthToken(false);
+    setUser(null);
   };
 
   const logout = async () => {
