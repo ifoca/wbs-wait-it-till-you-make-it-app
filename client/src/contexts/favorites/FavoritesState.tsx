@@ -59,7 +59,6 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
       setLoading(false);
     }
   };
-  //---
 
   const removeFavorite = async (favoriteId: string) => {
     if (!user) return;
@@ -91,9 +90,9 @@ function FavoritesState({ children }: { children: React.ReactNode }) {
         credentials: 'include',
       });
       if (!res.ok) {
-        const payload = await res.json().catch (()=>null);
-        setError(payload?.message || 'Could not remove all favorites.')
-     return;
+        const payload = await res.json().catch(() => null);
+        setError(payload?.message || 'Could not remove all favorites.');
+        return;
       }
       setFavorites([]);
     } catch (err: unknown) {
