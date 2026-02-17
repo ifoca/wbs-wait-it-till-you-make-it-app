@@ -76,7 +76,7 @@ function DeparturesList() {
   if (error) {
     return (
       <>
-        <div ref={resultsRef} className="flex flex-col gap-4 items-center">
+        <div className="flex flex-col gap-4 items-center">
           <ErrorMessage error={error} />
         </div>
       </>
@@ -140,7 +140,7 @@ function DeparturesList() {
                   <td className="w-16">Line</td>
                   <td className="min-w-32">To</td>
                   <td className="w-20">Dpt.</td>
-                  <td className="w-12">In</td>
+                  <td className="w-16">In</td>
                 </tr>
               </thead>
               <tbody>
@@ -157,7 +157,7 @@ function DeparturesList() {
         )}
 
         {authToken && isAlreadySaved && (
-          <button className="btn btn-xs" disabled>
+          <button className="btn btn-sm" disabled>
             Already saved
           </button>
         )}
@@ -167,14 +167,14 @@ function DeparturesList() {
             onClick={() => {
               addFavorite(cityName, stationName);
             }}
-            className="btn btn-xs"
+            className="btn btn-sm"
           >
             Save to favorite
           </button>
         )}
 
         <button
-          className="btn btn-xs"
+          className="btn btn-sm"
           onClick={() =>
             (document.getElementById('departures_modal') as HTMLDialogElement)?.showModal()
           }

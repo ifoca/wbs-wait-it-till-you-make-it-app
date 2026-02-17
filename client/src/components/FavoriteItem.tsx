@@ -1,3 +1,4 @@
+import { FaMinusCircle, FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import type { Favorite } from '../types';
 import { useFavoritesState } from '../contexts';
@@ -8,33 +9,27 @@ type FavoriteItemProps = {
 
 const FavoriteItem = ({ favorite }: FavoriteItemProps) => {
   const navigate = useNavigate();
+  const { removeFavorite } = useFavoritesState();
 
   const handleSearch = () => {
     navigate(`/search/${favorite.stationId.cityName}/${favorite.stationId.stationName}`);
   };
 
-  const { removeFavorite, removeAllFavorites } = useFavoritesState();
   return (
-    <tr className="hover:bg-base-100">
-      <td>{favorite.stationId.cityName}</td>
-      <td>{favorite.stationId.stationName}</td>
+    <tr className="text-center hover:bg-base-100">
+      <td className="whitespace-normal break-words">{favorite.stationId.cityName}</td>
+      <td className="whitespace-normal break-words">{favorite.stationId.stationName}</td>
       <td>
-        <button onClick={handleSearch} className="btn btn-xs hover:bg-base-300">
-          Departures
+        <button onClick={handleSearch} className="btn btn-sm bg-base-100 hover:bg-base-300">
+          <span>{<FaSearch />}</span>
         </button>
       </td>
       <td>
         <button
-          className="btn btn-xs hover:bg-base-300"
+          className="btn btn-sm bg-base-100 hover:bg-base-300"
           onClick={() => removeFavorite(favorite._id)}
         >
-          Remove
-        </button>
-      </td>
-
-      <td>
-        <button className="btn btn-xs" onClick={() => removeAllFavorites()}>
-          clear
+          <span>{<FaMinusCircle />}</span>
         </button>
       </td>
     </tr>
