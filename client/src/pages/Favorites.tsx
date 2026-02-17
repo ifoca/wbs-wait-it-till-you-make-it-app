@@ -8,7 +8,7 @@ const FavoritesPage = () => {
   const navigate = useNavigate();
   const { error, loading } = useErrorAndLoadingState();
   const { authToken, user } = useAuthState();
-  const { favorites, removeAllFavorites } = useFavoritesState();
+  const { favorites, } = useFavoritesState();
 
   useEffect(() => {
     if (!user) return;
@@ -68,9 +68,7 @@ const FavoritesPage = () => {
             ))}
           </tbody>
         </table>
-        <button className="btn btn-xs" onClick={() => removeAllFavorites()}>
-            Remove all
-          </button>
+        
       </div>
     </>
     
