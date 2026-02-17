@@ -17,8 +17,11 @@ const FavoritesPage = () => {
   if (!authToken) {
     return (
       <div className="text-center p-8">
-        <p>Log in to see your favorites!</p>
-        <button onClick={() => navigate('/user')} className="btn m-4 p-4">
+        <p className="p-4">Log in to see your favorites!</p>
+        <button
+          onClick={() => navigate('/user')}
+          className="btn btn-sm bg-base-300 hover:bg-neutral"
+        >
           Go to Login
         </button>
       </div>
