@@ -5,6 +5,7 @@ type FavoritesContextType = {
   favorites: Favorite[];
   addFavorite: (city: string, station: string) => Promise<void>;
   removeFavorite: (id: string) => Promise<void>;
+  removeAllFavorites: () => Promise<void>;
   isFavorite: (city: string, station: string) => boolean;
 };
 

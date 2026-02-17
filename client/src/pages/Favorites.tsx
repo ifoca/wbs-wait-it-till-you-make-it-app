@@ -8,7 +8,7 @@ const FavoritesPage = () => {
   const navigate = useNavigate();
   const { error, loading } = useErrorAndLoadingState();
   const { authToken, user } = useAuthState();
-  const { favorites } = useFavoritesState();
+  const { favorites, } = useFavoritesState();
 
   useEffect(() => {
     if (!user) return;
@@ -50,6 +50,9 @@ const FavoritesPage = () => {
         <h1 className="text-xl font-semibold text-neutral-content text-center p-4">
           Your favorites at a glance
         </h1>
+        <div className="flex justify-end px-4 pb-2">
+          
+        </div>
         <table className="table table-xs">
           <thead>
             <tr>
@@ -65,9 +68,17 @@ const FavoritesPage = () => {
             ))}
           </tbody>
         </table>
+        
       </div>
     </>
+    
+    
+    
   );
+  
 };
+
+
+//
 
 export default FavoritesPage;

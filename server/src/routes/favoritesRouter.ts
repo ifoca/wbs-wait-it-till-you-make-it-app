@@ -12,8 +12,9 @@ favoritesRouter.post(
   zodValidation(favoriteInputSchema),
   addFavorite,
 );
-favoritesRouter.delete('/:userId/:favoriteId', validateObjectId('userId'), validateObjectId('favoriteId'), deleteOneFavorite);
 favoritesRouter.delete('/:userId/delete-All', validateObjectId('userId'), deleteAllFavorites);
+favoritesRouter.delete('/:userId/:favoriteId', validateObjectId('userId'), validateObjectId('favoriteId'), deleteOneFavorite);
+
 
 
 
