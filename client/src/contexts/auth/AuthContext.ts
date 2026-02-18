@@ -6,6 +6,7 @@ export type AuthContextType = {
   user: User | null;
   setAuth: (isAuthenticated: boolean) => void;
   logout: () => void;
+  isWakingUp: boolean;
 };
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
