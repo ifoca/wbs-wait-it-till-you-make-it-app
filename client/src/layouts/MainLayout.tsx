@@ -20,7 +20,7 @@ const MainLayout = () => {
           </div>
         </div>
       </div>
-      <div className="p-4">
+      <div className="flex flex-col gap-4 p-4">
         <Outlet />
       </div>
     </div>

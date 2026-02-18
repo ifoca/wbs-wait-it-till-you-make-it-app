@@ -44,11 +44,11 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-300 text-neutral-content">
       <div>
-        <img src="/assets/logo.png" alt="Logo" className="w-12 h-12" />
+        <img src="/assets/logo.svg" alt="Logo" className="w-12 h-12" />
       </div>
       <div className="flex-1 mx-4">
-        <div className="text-2xl font-semibold">Wait it till you make it</div>
-        <div className="text-xs font-light">Tram and bus departure times</div>
+        <div className="text-xl font-bold">Wait it till you make it</div>
+        <div className="text-xs font-light">Leave home on time, every time</div>
       </div>
       <div className="flex-none">
         <button

@@ -21,7 +21,7 @@ const SearchBar = () => {
         onSubmit={handleSubmit}
         className="flex items-center flex-col gap-6 p-4 text-neutral-content"
       >
-        <h1 className="text-xl font-semibold">Search for your station</h1>
+        <h1 className="text-xl font-semibold">Search for a station nearby</h1>
 
         <label className="input w-full mx-auto">
           <svg
