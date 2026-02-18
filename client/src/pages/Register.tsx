@@ -87,6 +87,10 @@ const Register = () => {
 
   return (
     <>
+      <div className="text-center">
+        <h1 className="text-3xl font-bold px-4">Create your account</h1>
+        <p className="text-sm px-4">Save your favorite stations and access them from anywhere.</p>
+      </div>
       {error && <ErrorMessage error={error} />}
       <div>
         <form
