@@ -7,7 +7,7 @@ import {
   ErrorPage,
   Login,
   Register,
-  UserProfile,
+  // UserProfile,
   DeleteAccount,
   FavoritesPage,
 } from './pages';
@@ -30,7 +30,7 @@ function App() {
                 <Route path="user" element={<UserLayout />}>
                   <Route index element={<Login />} />
                   <Route path="register" element={<Register />} />
-                  <Route path="profile" element={<UserProfile />} />
+                  {/* <Route path="profile" element={<UserProfile />} /> */}
                   <Route path="delete" element={<DeleteAccount />} />
                   <Route path="favorites" element={<FavoritesPage />} />
                 </Route>

@@ -11,7 +11,7 @@ const Navbar = () => {
   const [sideBaropen, setSidebaropen] = useState(false);
   const { authToken, logout } = useAuthState();
   const allowedSidebarData = authToken
-    ? ['Homepage', 'Favorites', 'User Profile', 'Logout']
+    ? ['Homepage', 'Favorites', 'Logout']
     : ['Homepage', 'Login', 'Register'];
 
   useEffect(() => {
