@@ -53,6 +53,13 @@ const FavoritesPage = () => {
 
   return (
     <>
+      {' '}
+      <div className="text-center">
+        <h1 className="text-3xl font-bold px-4">Your Stations</h1>
+        <p className="text-sm px-4">
+          Your saved stations at a glance. Jump straight to departures or manage your list.
+        </p>
+      </div>
       <div className="flex-1 bg-base-100">
         <h3 className="font-semibold text-center m-2 p-2">Your saved stations at a glance</h3>
         <div className="overflow-x-auto w-full mx-auto border rounded-box border-base-content/5 bg-base-300">
