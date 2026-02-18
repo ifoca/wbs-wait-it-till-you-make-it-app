@@ -6,21 +6,23 @@ import { type User } from '../../types/index';
 function AuthState({ children }: { children: React.ReactNode }) {
   const [authToken, setAuthToken] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isWakingUp, setIsWakingUp] = useState(false);
   const { setError, setLoading } = useErrorAndLoadingState();
 
   const apiBaseUrl = import.meta.env.VITE_SERVER_API_URL;
 
   const loadCurrentUser = async () => {
+    setIsWakingUp(true);
     try {
       setError(null);
       setLoading(true);
       const res = await fetch(`${apiBaseUrl}/auth/user/current/me`, {
         credentials: 'include',
+        signal: AbortSignal.timeout(90000), // 90 second timeout
       });
 
       if (res.ok) {
         const data = await res.json();
-        console.log(data);
         const userData: User = {
           id: data.user._id,
           username: data.user.username,
@@ -36,6 +38,7 @@ function AuthState({ children }: { children: React.ReactNode }) {
       const message = (error as { message: string }).message;
       setError(message);
     } finally {
+      setIsWakingUp(false);
       setLoading(false);
     }
   };
@@ -63,7 +66,7 @@ function AuthState({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ authToken, user, setAuth, logout }}>
+    <AuthContext.Provider value={{ authToken, user, setAuth, logout, isWakingUp }}>
       {children}
     </AuthContext.Provider>
   );
