@@ -166,7 +166,7 @@ function DeparturesList() {
             </button>
           )}
           <button
-            className="btn btn-sm"
+            className="btn btn-sm ml-auto"
             onClick={() =>
               (document.getElementById('departures_modal') as HTMLDialogElement)?.showModal()
             }
