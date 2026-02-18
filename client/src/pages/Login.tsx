@@ -79,6 +79,10 @@ const Login = () => {
 
   return (
     <>
+      <div className="text-center">
+        <h1 className="text-3xl font-bold px-4">Welcome back</h1>
+        <p className="text-sm px-4">Sign in to view your saved stations.</p>
+      </div>
       {error && <ErrorMessage error={error} />}
       <div>
         <form

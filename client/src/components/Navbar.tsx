@@ -6,6 +6,7 @@ import { useAuthState } from '../contexts';
 const Navbar = () => {
   const navigate = useNavigate();
   const sidebarRef = useRef<HTMLUListElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const [sideBaropen, setSidebaropen] = useState(false);
   const { authToken, logout } = useAuthState();
@@ -15,9 +16,16 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
-        setSidebaropen(false);
+      const target = event.target as Node;
+
+      if (
+        (sidebarRef.current && sidebarRef.current.contains(target)) ||
+        (buttonRef.current && buttonRef.current.contains(target))
+      ) {
+        return;
       }
+
+      setSidebaropen(false);
     };
 
     if (sideBaropen) {
@@ -36,14 +44,15 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-300 text-neutral-content">
       <div>
-        <img src="/assets/logo.png" alt="Logo" className="w-12 h-12" />
+        <img src="/assets/logo.svg" alt="Logo" className="w-12 h-12" />
       </div>
       <div className="flex-1 mx-4">
-        <div className="text-2xl font-semibold">Wait it till you make it</div>
-        <div className="text-xs font-light">Tram and bus departure times</div>
+        <div className="text-xl font-bold">Wait it till you make it</div>
+        <div className="text-xs font-light">Leave home on time, every time</div>
       </div>
       <div className="flex-none">
         <button
+          ref={buttonRef}
           className="btn btn-square btn-ghost hover:bg-base-100"
           onClick={() => setSidebaropen(!sideBaropen)}
           aria-expanded={sideBaropen}

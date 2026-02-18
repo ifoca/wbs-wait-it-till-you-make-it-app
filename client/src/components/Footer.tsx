@@ -2,19 +2,19 @@ import { NavLink } from 'react-router';
 
 const Footer = () => {
   return (
-    <footer className="footer bg-base-300 footer-horizontal footer-center text-neutral-content p-10">
+    <footer className="footer bg-base-300 footer-horizontal footer-center text-neutral-content p-4">
       <nav className="grid grid-flow-col gap-4">
         <div className="link link-hover">
           <NavLink to={'/'}>Home</NavLink>
         </div>
         <div className="link link-hover">
-          <NavLink to={'/about'}>About</NavLink>
+          <NavLink to={'/search'}>Departures</NavLink>
         </div>
         <div className="link link-hover">
-          <NavLink to={'/user'}>User area</NavLink>
+          <NavLink to={'/user'}>My Account</NavLink>
         </div>
       </nav>
-      <nav>
+      {/* <nav>
         <div className="grid grid-flow-col gap-4">
           <a>
             <svg
@@ -50,9 +50,12 @@ const Footer = () => {
             </svg>
           </a>
         </div>
-      </nav>
+      </nav> */}
       <aside>
-        <p>Copyright © {new Date().getFullYear()} - All right reserved by @ifoca and @bethelike </p>
+        <p>
+          © {new Date().getFullYear()} - Wait It Till You Make It — Built for commuters, by
+          commuters.
+        </p>
       </aside>
     </footer>
   );

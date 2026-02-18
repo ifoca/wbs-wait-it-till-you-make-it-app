@@ -21,7 +21,7 @@ const SearchBar = () => {
         onSubmit={handleSubmit}
         className="flex items-center flex-col gap-6 p-4 text-neutral-content"
       >
-        <h1 className="text-xl font-semibold">Search for your station</h1>
+        <h3 className="text-xl font-semibold">Search for a station nearby</h3>
 
         <label className="input w-full mx-auto">
           <svg
@@ -78,10 +78,10 @@ const SearchBar = () => {
         </label>
         <button
           type="submit"
-          className={`w-24 btn ${!isDisabled ? 'bg-base-100' : ''} hover:bg-neutral`}
+          className={`w-24 btn btn-md text-xs font-semibold ${!isDisabled ? 'bg-base-100' : ''} hover:bg-neutral`}
           disabled={isDisabled}
         >
-          Search
+          Find Departures
         </button>
       </form>
     </>

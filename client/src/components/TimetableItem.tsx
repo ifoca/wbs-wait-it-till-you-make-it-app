@@ -28,13 +28,14 @@ const TimetableItem = ({ station }: TimetableItemProps) => {
   return (
     <>
       <tr
-        className={`text-center ${isProblem ? 'text-red-400' : 'text-green-400'} hover:bg-base-100`}
+        className={`text-center text-sm ${isProblem ? 'text-red-400' : 'text-green-400'} hover:bg-base-100`}
       >
-        <td>{station.platform}</td>
-        <td>{station.line}</td>
-        <td className="whitespace-normal break-words">{station.destination}</td>
-        <td>{onTime ? station.sched_time : station.time}</td>
-        <td>{cancelled ? 'Off' : minutesUntil === 0 ? 'Now' : `${minutesUntil} min`}</td>
+        <td className="p-2">{station.line}</td>
+        <td className="whitespace-normal break-words flex-wrap p-2">{station.destination}</td>
+        <td className="p-2">{onTime ? station.sched_time : station.time}</td>
+        <td className="p-2">
+          {cancelled ? 'Off' : minutesUntil === 0 ? 'Now' : `${minutesUntil} min`}
+        </td>
       </tr>
     </>
   );
