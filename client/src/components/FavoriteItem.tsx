@@ -16,7 +16,7 @@ const FavoriteItem = ({ favorite }: FavoriteItemProps) => {
   };
 
   return (
-    <tr className="text-center hover:bg-base-100">
+    <tr className="text-center hover:bg-base-100 text-sm">
       <td className="whitespace-normal break-words">{favorite.stationId.cityName}</td>
       <td className="whitespace-normal break-words">{favorite.stationId.stationName}</td>
       <td>

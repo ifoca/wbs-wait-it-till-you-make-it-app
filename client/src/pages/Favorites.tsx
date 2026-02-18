@@ -64,7 +64,7 @@ const FavoritesPage = () => {
         <div className="overflow-x-auto w-full mx-auto border rounded-box border-base-content/5 bg-base-300">
           <table className="table table-xs table-pin-rows table-pin-cols">
             <thead>
-              <tr className="text-center ">
+              <tr className="text-center text-sm">
                 <td className="w-32">City</td>
                 <td className="w-32">Station</td>
                 <td className="w-18">Search</td>
