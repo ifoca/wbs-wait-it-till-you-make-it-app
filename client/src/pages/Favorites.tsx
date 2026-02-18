@@ -61,7 +61,6 @@ const FavoritesPage = () => {
         </p>
       </div>
       <div className="flex-1 bg-base-100">
-        <h3 className="font-semibold text-center m-2 p-2">Your saved stations at a glance</h3>
         <div className="overflow-x-auto w-full mx-auto border rounded-box border-base-content/5 bg-base-300">
           <table className="table table-xs table-pin-rows table-pin-cols">
             <thead>

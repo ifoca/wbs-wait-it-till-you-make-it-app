@@ -92,38 +92,32 @@ function DeparturesList() {
         <dialog id="departures_modal" className="modal ">
           <div className="modal-box w-screen max-w-none h-5/6 bg-base-300">
             <form method="dialog">
-              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+              <button className="btn btn-xl btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
 
-            <h3 className="font-bold text-lg mb-4">All Departures</h3>
+            <h3 className="font-bold text-2xl mb-4">All Departures</h3>
 
             <div className="overflow-auto h-full ">
               <table className="table table-xs table-pin-rows">
                 <thead>
-                  <tr className="text-center">
-                    <td className="w-12">Pl.</td>
-                    <td className="w-16">Line</td>
-                    <td className="min-w-32">To</td>
-                    <td className="w-20">Dpt.</td>
-                    <td className="w-12">In</td>
+                  <tr className="text-center text-sm">
+                    <td className="w-12">Line</td>
+                    <td className="min-w-32">Destination</td>
+                    <td className="w-16">Departs</td>
+                    <td className="w-16">In</td>
                   </tr>
                 </thead>
                 <tbody>
-                  {stations.map(
-                    (
-                      station, // Show ALL
-                    ) => (
-                      <TimetableItem key={station.key + station.countdown} station={station} />
-                    ),
-                  )}
+                  {stations.map((station) => (
+                    <TimetableItem key={station.key + station.countdown} station={station} />
+                  ))}
                 </tbody>
                 <tfoot>
-                  <tr className="text-center">
-                    <td className="w-12">Pl.</td>
-                    <td className="w-16">Line</td>
-                    <td className="min-w-32">To</td>
-                    <td className="w-20">Dpt.</td>
-                    <td className="w-12">In</td>
+                  <tr className="text-center text-sm">
+                    <td className="w-12">Line</td>
+                    <td className="min-w-32">Destination</td>
+                    <td className="w-16">Departs</td>
+                    <td className="w-16">In</td>
                   </tr>
                 </tfoot>
               </table>
@@ -135,11 +129,10 @@ function DeparturesList() {
           <div className="overflow-x-auto w-full mx-auto border rounded-box border-base-content/5 bg-base-300">
             <table className="table table-xs table-pin-rows table-pin-cols">
               <thead>
-                <tr className="text-center">
-                  <td className="w-12">Pl.</td>
-                  <td className="w-16">Line</td>
-                  <td className="min-w-32">To</td>
-                  <td className="w-20">Dpt.</td>
+                <tr className="text-center text-sm">
+                  <td className="w-12">Line</td>
+                  <td className="min-w-32">Destination</td>
+                  <td className="w-16">Departs</td>
                   <td className="w-16">In</td>
                 </tr>
               </thead>
@@ -156,31 +149,31 @@ function DeparturesList() {
           </div>
         )}
 
-        {authToken && isAlreadySaved && (
-          <button className="btn btn-sm" disabled>
-            Already saved
-          </button>
-        )}
-
-        {authToken && !isAlreadySaved && (
+        <div className="mt-4 flex justify-between items-center">
+          {authToken && isAlreadySaved && (
+            <button className="btn btn-sm" disabled>
+              Already saved
+            </button>
+          )}
+          {authToken && !isAlreadySaved && (
+            <button
+              onClick={() => {
+                addFavorite(cityName, stationName);
+              }}
+              className="btn btn-sm"
+            >
+              Save station
+            </button>
+          )}
           <button
-            onClick={() => {
-              addFavorite(cityName, stationName);
-            }}
             className="btn btn-sm"
+            onClick={() =>
+              (document.getElementById('departures_modal') as HTMLDialogElement)?.showModal()
+            }
           >
-            Save to favorite
+            Show All {stations.length} departures
           </button>
-        )}
-
-        <button
-          className="btn btn-sm"
-          onClick={() =>
-            (document.getElementById('departures_modal') as HTMLDialogElement)?.showModal()
-          }
-        >
-          View All ({stations.length} departures)
-        </button>
+        </div>
       </div>
     </>
   );
