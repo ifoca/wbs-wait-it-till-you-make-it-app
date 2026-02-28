@@ -15,6 +15,16 @@ Examples:
     normalizeGermanText("Köln")        -> "koeln"
 */
 
+export const replaceUmlauts = (text: string): string => {
+  return text
+    .toLowerCase()
+    .replace(/ä/g, 'a')
+    .replace(/ö/g, 'o')
+    .replace(/ü/g, 'u')
+    .replace(/ß/g, 'ss')
+    .trim();
+};
+
 // Standardize the text format
 // Capitalizes the first char and Lowercases all the chars starting with index 1
 export const capitalizeCity = (text: string): string => {

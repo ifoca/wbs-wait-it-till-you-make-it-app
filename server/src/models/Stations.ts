@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { normalizeGermanText, capitalizeCity } from '#utils';
+import { normalizeGermanText, capitalizeCity, replaceUmlauts } from '#utils';
 
 const stationsSchema = new Schema(
   {
@@ -10,11 +10,17 @@ const stationsSchema = new Schema(
     cityNameNormalized: {
       type: String,
     },
+    cityNameNoUmlauts: {
+      type: String,
+    },
     stationName: {
       type: String,
       required: true,
     },
     stationNameNormalized: {
+      type: String,
+    },
+    stationNameNoUmlauts: {
       type: String,
     },
     searchCount: {
@@ -43,10 +49,12 @@ stationsSchema.pre('save', function () {
   if (this.isModified('cityName')) {
     this.cityName = capitalizeCity(this.cityName);
     this.cityNameNormalized = normalizeGermanText(this.cityName);
+    this.cityNameNoUmlauts = replaceUmlauts(this.cityName);
   }
   if (this.isModified('stationName')) {
     this.stationName = capitalizeCity(this.stationName);
     this.stationNameNormalized = normalizeGermanText(this.stationName);
+    this.stationNameNoUmlauts = replaceUmlauts(this.stationName);
   }
 });
 
@@ -55,13 +63,23 @@ stationsSchema.pre('findOneAndUpdate', function () {
 
   if (update.cityName) {
     update.cityNameNormalized = normalizeGermanText(update.cityName);
+    update.cityNameNoUmlauts = replaceUmlauts(update.cityName);
   }
   if (update.stationName) {
     update.stationNameNormalized = normalizeGermanText(update.stationName);
+    update.stationNameNoUmlauts = replaceUmlauts(update.stationName);
   }
 });
 
-stationsSchema.index({ cityNameNormalized: 1, stationNameNormalized: 1 }, { unique: true });
+stationsSchema.index(
+  {
+    cityNameNormalized: 1,
+    stationNameNormalized: 1,
+    cityNameNoUmlauts: 1,
+    stationNameNoUmlauts: 1,
+  },
+  { unique: true },
+);
 
 export default model('Stations', stationsSchema);
 
