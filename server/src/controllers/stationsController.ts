@@ -1,9 +1,10 @@
 import type { RequestHandler } from 'express';
 import { Stations } from '#models';
-import { normalizeGermanText, replaceUmlauts } from '#utils';
+import { normalizeGermanText } from '#utils';
 import { DEPARTURES_API } from '#config';
 import type { DeparturesResponse } from '#types';
-// import type { StationsSchema } from '#schemas';
+
+const departuresApi = DEPARTURES_API;
 
 // Get all locations
 export const getAllLocations: RequestHandler = async (req, res) => {
@@ -95,39 +96,24 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
   req,
   res,
 ) => {
-  const departuresApi = DEPARTURES_API;
-  let apiRequest;
   const { cityName, stationName } = req.params;
 
-  if (!cityName || !stationName) {
-    return res.status(400).json({
-      message: 'Invalid request. cityName and stationName are required',
-    });
-  }
+  const searchCity = normalizeGermanText(cityName);
+  const searchStation = normalizeGermanText(stationName);
 
-  const normalizedCity = normalizeGermanText(cityName);
-  const normalizedStation = normalizeGermanText(stationName);
-  const cityNameNoUmlauts = replaceUmlauts(cityName);
-  const stationNameNoUmlauts = replaceUmlauts(stationName);
+  const existingCity = await Stations.findOne({ cityNameNormalized: searchCity });
 
-  const exists = await Stations.findOne({ cityNameNoUmlauts, stationNameNoUmlauts });
-  if (exists) {
-    // city and station without umlauts exists in the database
-    // so we make the request with the normalized names
-    apiRequest = await fetch(
-      `${departuresApi}/${exists.cityNameNormalized}/${exists.stationNameNormalized}.json`,
-    );
-  } else {
-    // city and station without umlauts does not exists in the database
-    // so we normalized the user's input and perform a search
-    apiRequest = await fetch(`${departuresApi}/${normalizedCity}/${normalizedStation}.json`);
-  }
+  const apiCity = existingCity ? existingCity.cityName : cityName;
+  const apiStation = searchStation ? searchStation : stationName;
 
-  if (!apiRequest.ok) {
+  const apiUrl = `${departuresApi}/${apiCity}/${apiStation}.json`;
+  const response = await fetch(apiUrl);
+
+  if (!response.ok) {
     throw new Error('Could not get departures from the external API');
   }
 
-  const departures = (await apiRequest.json()) as DeparturesResponse;
+  const departures = (await response.json()) as DeparturesResponse;
 
   if (departures.error !== null) {
     return res.status(404).json({ error: departures.error });
@@ -135,19 +121,21 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
   if (departures.raw.length === 0) {
     return res.status(404).json({ error: `No departures found for ${cityName}, ${stationName}.` });
   }
+  const futureDepartures = filterFutureDepartures(departures.raw);
+  return res.status(200).json(futureDepartures);
+};
 
-  // Filter out past departures
+// Filter out past departures
+function filterFutureDepartures(departures: any[]) {
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-  const futureDepartures = departures.raw.filter((dep: any) => {
+  return departures.filter((dep) => {
     const [hours, minutes] = dep.sched_time.split(':').map(Number);
     const depMinutes = hours * 60 + minutes;
     return depMinutes >= currentMinutes;
   });
-
-  return res.status(200).json(futureDepartures);
-};
+}
 
 // TO DO: add logic to hit the endpoint to make sure it is up and running
 // check that GET https://vrrf.finalrewind.org/ is returning a 200 OK
@@ -157,30 +145,3 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
 //   console.error('External API connection error:', error);
 //   process.exit(1);
 // }
-
-/*
-Case 1
-  user searches Düsseldorf
-    text is normalized to duesseldorf
-      api request made for duesseldorf
-        response is returned with results
-
-    ! name saved without umlaut Dusseldorf in the database
-
-Case 2
-  user searches duesseldorf
-    text is normalized to duesseldorf (no change)
-      api request made to duesseldorf
-        response is returned with results
-
-Case 3
-  user searches for Dusseldorf
-    text is normalized to dusseldorf
-      api request made to dusseldorf
-        response is returned with No results
-        ! but error === null
-    
-    i need to check if we have dusseldorf in the database as no umlauts
-
-
-*/
