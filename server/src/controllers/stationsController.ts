@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import { Stations } from '#models';
-import { normalizeGermanText } from '#utils';
+import { normalizeGermanText, replaceUmlauts } from '#utils';
 import { DEPARTURES_API } from '#config';
 import type { DeparturesResponse } from '#types';
 // import type { StationsSchema } from '#schemas';
@@ -96,7 +96,7 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
   res,
 ) => {
   const departuresApi = DEPARTURES_API;
-
+  let apiRequest;
   const { cityName, stationName } = req.params;
 
   if (!cityName || !stationName) {
@@ -104,17 +104,30 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
       message: 'Invalid request. cityName and stationName are required',
     });
   }
-  // Normalize text to check for duplicates
+
   const normalizedCity = normalizeGermanText(cityName);
   const normalizedStation = normalizeGermanText(stationName);
+  const cityNameNoUmlauts = replaceUmlauts(cityName);
+  const stationNameNoUmlauts = replaceUmlauts(stationName);
 
-  const apiResults = await fetch(`${departuresApi}/${normalizedCity}/${normalizedStation}.json`);
-  console.log(apiResults);
-  if (!apiResults.ok) {
+  const exists = await Stations.findOne({ cityNameNoUmlauts, stationNameNoUmlauts });
+  if (exists) {
+    // city and station without umlauts exists in the database
+    // so we make the request with the normalized names
+    apiRequest = await fetch(
+      `${departuresApi}/${exists.cityNameNormalized}/${exists.stationNameNormalized}.json`,
+    );
+  } else {
+    // city and station without umlauts does not exists in the database
+    // so we normalized the user's input and perform a search
+    apiRequest = await fetch(`${departuresApi}/${normalizedCity}/${normalizedStation}.json`);
+  }
+
+  if (!apiRequest.ok) {
     throw new Error('Could not get departures from the external API');
   }
 
-  const departures = (await apiResults.json()) as DeparturesResponse;
+  const departures = (await apiRequest.json()) as DeparturesResponse;
 
   if (departures.error !== null) {
     return res.status(404).json({ error: departures.error });
@@ -123,7 +136,7 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
     return res.status(404).json({ error: `No departures found for ${cityName}, ${stationName}.` });
   }
 
-  // Filter past departures
+  // Filter out past departures
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
@@ -144,3 +157,30 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
 //   console.error('External API connection error:', error);
 //   process.exit(1);
 // }
+
+/*
+Case 1
+  user searches Düsseldorf
+    text is normalized to duesseldorf
+      api request made for duesseldorf
+        response is returned with results
+
+    ! name saved without umlaut Dusseldorf in the database
+
+Case 2
+  user searches duesseldorf
+    text is normalized to duesseldorf (no change)
+      api request made to duesseldorf
+        response is returned with results
+
+Case 3
+  user searches for Dusseldorf
+    text is normalized to dusseldorf
+      api request made to dusseldorf
+        response is returned with No results
+        ! but error === null
+    
+    i need to check if we have dusseldorf in the database as no umlauts
+
+
+*/
