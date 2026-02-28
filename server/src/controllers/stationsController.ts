@@ -91,12 +91,25 @@ export const createStationForCity: RequestHandler = async (req, res) => {
   }
 };
 
-export const getDepartures: RequestHandler = async (req, res) => {
+export const getDepartures: RequestHandler<{ cityName: string; stationName: string }> = async (
+  req,
+  res,
+) => {
   const departuresApi = DEPARTURES_API;
 
   const { cityName, stationName } = req.params;
 
-  const apiResults = await fetch(`${departuresApi}/${cityName}/${stationName}.json`);
+  if (!cityName || !stationName) {
+    return res.status(400).json({
+      message: 'Invalid request. cityName and stationName are required',
+    });
+  }
+  // Normalize text to check for duplicates
+  const normalizedCity = normalizeGermanText(cityName);
+  const normalizedStation = normalizeGermanText(stationName);
+
+  const apiResults = await fetch(`${departuresApi}/${normalizedCity}/${normalizedStation}.json`);
+  console.log(apiResults);
   if (!apiResults.ok) {
     throw new Error('Could not get departures from the external API');
   }
