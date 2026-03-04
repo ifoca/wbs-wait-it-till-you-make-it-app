@@ -29,7 +29,16 @@ function DeparturesList() {
         }
 
         const data = await res.json();
-        setStations(data);
+
+        const now = new Date();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+        const futureDepartures = data.filter((dep: Departures) => {
+          const [hours, minutes] = dep.time.split(':').map(Number);
+          const depMinutes = hours * 60 + minutes;
+          return depMinutes >= currentMinutes; // Only future
+        });
+        setStations(futureDepartures);
 
         setTimeout(() => {
           resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });

@@ -5,8 +5,6 @@ type TimetableItemProps = {
 };
 
 const TimetableItem = ({ station }: TimetableItemProps) => {
-  // TO do: add condition to render `cancelled` in the Delay column
-  // if we have in the response: station.is_cancelled === 1
   const getMinutesFromTime = (timeStr: string) => {
     const [hours, minutes] = timeStr.split(':').map(Number);
     return hours * 60 + minutes;
@@ -17,9 +15,9 @@ const TimetableItem = ({ station }: TimetableItemProps) => {
     return now.getHours() * 60 + now.getMinutes();
   };
 
-  const schedMinutes = getMinutesFromTime(station.time);
+  const departureTime = getMinutesFromTime(station.time);
   const currentMinutes = getCurrentMinutes();
-  const minutesUntil = schedMinutes - currentMinutes;
+  const minutesUntil = departureTime - currentMinutes;
 
   const onTime = Number(station.delay) === 0 || station.delay === null;
   const cancelled = station.is_cancelled === 1;
