@@ -102,9 +102,10 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
   const searchStation = normalizeGermanText(stationName);
 
   const existingCity = await Stations.findOne({ cityNameNormalized: searchCity });
+  const existingStation = await Stations.findOne({ stationNameNormalized: searchStation });
 
   const apiCity = existingCity ? existingCity.cityName : cityName;
-  const apiStation = searchStation ? searchStation : stationName;
+  const apiStation = existingStation ? existingStation.stationName : stationName;
 
   const apiUrl = `${departuresApi}/${apiCity}/${apiStation}.json`;
   const response = await fetch(apiUrl);
