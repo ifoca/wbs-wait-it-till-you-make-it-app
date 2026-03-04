@@ -126,5 +126,11 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
     await saveStation(apiCity, apiStation);
   }
 
+  res.set({
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    Pragma: 'no-cache',
+    Expires: '0',
+  });
+
   return res.status(200).json(departures.raw);
 };
