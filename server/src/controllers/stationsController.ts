@@ -3,6 +3,7 @@ import { Stations } from '#models';
 import { normalizeGermanText } from '#utils';
 import { DEPARTURES_API } from '#config';
 import type { DeparturesResponse } from '#types';
+import { saveStation } from '#services';
 
 const departuresApi = DEPARTURES_API;
 
@@ -56,33 +57,29 @@ export const createStationForCity: RequestHandler = async (req, res) => {
         message: 'Invalid request. cityName and stationName are required',
       });
     }
-    // Normalize text to check for duplicates
-    const normalizedCity = normalizeGermanText(cityName);
-    const normalizedStation = normalizeGermanText(stationName);
 
-    // Check if this station already exists
+    const searchCity = normalizeGermanText(cityName);
+    const searchStation = normalizeGermanText(stationName);
+
     const existingStation = await Stations.findOne({
-      cityNameNormalized: normalizedCity,
-      stationNameNormalized: normalizedStation,
+      cityNameNormalized: searchCity,
+      stationNameNormalized: searchStation,
     });
+
     if (existingStation) {
       return res.status(409).json({
-        message: `Station ${stationName} in ${cityName} already exists`,
-        station: existingStation,
+        message: `Station with name ${existingStation.stationName} for ${existingStation.cityName} already exists in the database`,
       });
     }
 
     // Create new station (normalization happens automatically
     // via middleware in the Stations Model)
-    const newLocation = await Stations.create({
-      cityName,
-      stationName,
-      // cityNameNormalized and stationNameNormalized auto-set saved
-    });
+    // cityNameNormalized and stationNameNormalized auto-set saved
+    const station = await saveStation(cityName, stationName);
 
     return res.status(201).json({
       message: 'Location added successfully',
-      station: newLocation,
+      station: station,
     });
   } catch (error) {
     console.error('Error creating station:', error);
@@ -102,8 +99,10 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
   const searchStation = normalizeGermanText(stationName);
 
   const existingCity = await Stations.findOne({ cityNameNormalized: searchCity });
-  const existingStation = await Stations.findOne({ stationNameNormalized: searchStation });
-
+  const existingStation = await Stations.findOne({
+    cityNameNormalized: searchCity,
+    stationNameNormalized: searchStation,
+  });
   const apiCity = existingCity ? existingCity.cityName : cityName;
   const apiStation = existingStation ? existingStation.stationName : stationName;
 
@@ -122,27 +121,10 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
   if (departures.raw.length === 0) {
     return res.status(404).json({ error: `No departures found for ${cityName}, ${stationName}.` });
   }
-  const futureDepartures = filterFutureDepartures(departures.raw);
-  return res.status(200).json(futureDepartures);
+
+  if (!existingStation) {
+    await saveStation(apiCity, apiStation);
+  }
+
+  return res.status(200).json(departures.raw);
 };
-
-// Filter out past departures
-function filterFutureDepartures(departures: any[]) {
-  const now = new Date();
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-  return departures.filter((dep) => {
-    const [hours, minutes] = dep.sched_time.split(':').map(Number);
-    const depMinutes = hours * 60 + minutes;
-    return depMinutes >= currentMinutes;
-  });
-}
-
-// TO DO: add logic to hit the endpoint to make sure it is up and running
-// check that GET https://vrrf.finalrewind.org/ is returning a 200 OK
-// try {
-//   if (!externalDeparturesApi) throw new Error('Missing link to the external API');
-// } catch (error) {
-//   console.error('External API connection error:', error);
-//   process.exit(1);
-// }
