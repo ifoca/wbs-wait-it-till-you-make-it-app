@@ -34,21 +34,10 @@ function DeparturesList() {
         setTimeout(() => {
           resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
-
-        // If we get results, we have a valid city and station
-        // Save these to the database
-        await fetch(`${apiBaseURL}/locations/add`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            cityName,
-            stationName,
-          }),
-        });
       } catch (err: unknown) {
         setError(
           err instanceof Error
-            ? `Could not fetch departures for "${cityName}, ${stationName}".`
+            ? err.message
             : `Could not fetch departures for: "${cityName}, ${stationName}".`,
         );
       } finally {
