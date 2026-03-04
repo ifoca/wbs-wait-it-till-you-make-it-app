@@ -1,18 +1,18 @@
 export const normalizeGermanText = (text: string): string => {
   return text
     .toLowerCase()
-    .replace(/ä/g, 'ae')
-    .replace(/ö/g, 'oe')
-    .replace(/ü/g, 'ue')
+    .replace(/ä/g, 'a')
+    .replace(/ö/g, 'o')
+    .replace(/ü/g, 'u')
     .replace(/ß/g, 'ss')
     .trim();
 };
 
 /*
 Examples:
-    normalizeGermanText("Düsseldorf")  -> "duesseldorf"
-    normalizeGermanText("München")     -> "muenchen"
-    normalizeGermanText("Köln")        -> "koeln"
+    normalizeGermanText("Düsseldorf")  -> "dusseldorf"
+    normalizeGermanText("München")     -> "munchen"
+    normalizeGermanText("Köln")        -> "koln"
 */
 
 // Standardize the text format

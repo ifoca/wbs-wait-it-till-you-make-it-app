@@ -3,7 +3,8 @@ import { Stations } from '#models';
 import { normalizeGermanText } from '#utils';
 import { DEPARTURES_API } from '#config';
 import type { DeparturesResponse } from '#types';
-// import type { StationsSchema } from '#schemas';
+
+const departuresApi = DEPARTURES_API;
 
 // Get all locations
 export const getAllLocations: RequestHandler = async (req, res) => {
@@ -95,26 +96,25 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
   req,
   res,
 ) => {
-  const departuresApi = DEPARTURES_API;
-
   const { cityName, stationName } = req.params;
 
-  if (!cityName || !stationName) {
-    return res.status(400).json({
-      message: 'Invalid request. cityName and stationName are required',
-    });
-  }
-  // Normalize text to check for duplicates
-  const normalizedCity = normalizeGermanText(cityName);
-  const normalizedStation = normalizeGermanText(stationName);
+  const searchCity = normalizeGermanText(cityName);
+  const searchStation = normalizeGermanText(stationName);
 
-  const apiResults = await fetch(`${departuresApi}/${normalizedCity}/${normalizedStation}.json`);
-  console.log(apiResults);
-  if (!apiResults.ok) {
+  const existingCity = await Stations.findOne({ cityNameNormalized: searchCity });
+  const existingStation = await Stations.findOne({ stationNameNormalized: searchStation });
+
+  const apiCity = existingCity ? existingCity.cityName : cityName;
+  const apiStation = existingStation ? existingStation.stationName : stationName;
+
+  const apiUrl = `${departuresApi}/${apiCity}/${apiStation}.json`;
+  const response = await fetch(apiUrl);
+
+  if (!response.ok) {
     throw new Error('Could not get departures from the external API');
   }
 
-  const departures = (await apiResults.json()) as DeparturesResponse;
+  const departures = (await response.json()) as DeparturesResponse;
 
   if (departures.error !== null) {
     return res.status(404).json({ error: departures.error });
@@ -122,19 +122,21 @@ export const getDepartures: RequestHandler<{ cityName: string; stationName: stri
   if (departures.raw.length === 0) {
     return res.status(404).json({ error: `No departures found for ${cityName}, ${stationName}.` });
   }
+  const futureDepartures = filterFutureDepartures(departures.raw);
+  return res.status(200).json(futureDepartures);
+};
 
-  // Filter past departures
+// Filter out past departures
+function filterFutureDepartures(departures: any[]) {
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-  const futureDepartures = departures.raw.filter((dep: any) => {
+  return departures.filter((dep) => {
     const [hours, minutes] = dep.sched_time.split(':').map(Number);
     const depMinutes = hours * 60 + minutes;
     return depMinutes >= currentMinutes;
   });
-
-  return res.status(200).json(futureDepartures);
-};
+}
 
 // TO DO: add logic to hit the endpoint to make sure it is up and running
 // check that GET https://vrrf.finalrewind.org/ is returning a 200 OK

@@ -61,7 +61,13 @@ stationsSchema.pre('findOneAndUpdate', function () {
   }
 });
 
-stationsSchema.index({ cityNameNormalized: 1, stationNameNormalized: 1 }, { unique: true });
+stationsSchema.index(
+  {
+    cityNameNormalized: 1,
+    stationNameNormalized: 1,
+  },
+  { unique: true },
+);
 
 export default model('Stations', stationsSchema);
 
