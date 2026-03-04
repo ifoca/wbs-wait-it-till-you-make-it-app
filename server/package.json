@@ -39,6 +39,10 @@
     "#utils": {
       "development": "./src/utils/index.ts",
       "default": "./dist/utils/index.js"
+    },
+    "#services": {
+      "development": "./src/services/index.ts",
+      "default": "./dist/services/index.js"
     }
   },
   "scripts": {
