@@ -1,3 +1,4 @@
+import { FaCircle, FaUndo } from 'react-icons/fa';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ErrorMessage, LoadingMessage, TimetableItem } from '../components';
@@ -13,46 +14,46 @@ function DeparturesList() {
   const { authToken } = useAuthState();
   const { favorites, isFavorite, addFavorite } = useFavoritesState();
 
+  const fetchResults = async () => {
+    const apiBaseURL = import.meta.env.VITE_SERVER_API_URL;
+    try {
+      setLoading(true);
+      setError(null);
+      // Get departures for city / station
+      const res = await fetch(`${apiBaseURL}/locations/${cityName}/${stationName}/departures`);
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Could not fetch departures.`);
+      }
+
+      const data = await res.json();
+
+      const now = new Date();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+      const futureDepartures = data.filter((dep: Departures) => {
+        const [hours, minutes] = dep.time.split(':').map(Number);
+        const depMinutes = hours * 60 + minutes;
+        return depMinutes >= currentMinutes; // Only future
+      });
+      setStations(futureDepartures);
+
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : `Could not fetch departures for: "${cityName}, ${stationName}".`,
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!cityName || !stationName) return;
-
-    const fetchResults = async () => {
-      const apiBaseURL = import.meta.env.VITE_SERVER_API_URL;
-      try {
-        setLoading(true);
-        setError(null);
-        // Get departures for city / station
-        const res = await fetch(`${apiBaseURL}/locations/${cityName}/${stationName}/departures`);
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.error || `Could not fetch departures.`);
-        }
-
-        const data = await res.json();
-
-        const now = new Date();
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-        const futureDepartures = data.filter((dep: Departures) => {
-          const [hours, minutes] = dep.time.split(':').map(Number);
-          const depMinutes = hours * 60 + minutes;
-          return depMinutes >= currentMinutes; // Only future
-        });
-        setStations(futureDepartures);
-
-        setTimeout(() => {
-          resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-      } catch (err: unknown) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : `Could not fetch departures for: "${cityName}, ${stationName}".`,
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchResults();
   }, [cityName, stationName, favorites]);
@@ -84,7 +85,7 @@ function DeparturesList() {
   return (
     <>
       <div className="flex-1 bg-base-100">
-        <h3 ref={resultsRef} className="font-semibold text-center m-2 p-2">
+        <h3 ref={resultsRef} className="font-semibold text-lg  m-2 p-2">
           Departures for {cityName}, {stationName}:{' '}
         </h3>
         <dialog id="departures_modal" className="modal ">
@@ -124,22 +125,40 @@ function DeparturesList() {
         </dialog>
 
         {stations || !loading ? (
-          <div className="overflow-x-auto w-full mx-auto border rounded-box border-base-content/5 bg-base-300">
-            <table className="table table-xs table-pin-rows table-pin-cols">
-              <thead>
-                <tr className="text-center text-sm">
-                  <td className="w-12">Line</td>
-                  <td className="min-w-32">Destination</td>
-                  <td className="w-16">Departs</td>
-                  <td className="w-16">In</td>
-                </tr>
-              </thead>
-              <tbody>
-                {stations.slice(0, 10).map((station) => (
-                  <TimetableItem key={station.key + station.countdown} station={station} />
-                ))}
-              </tbody>
-            </table>
+          <div className="w-full mx-auto ">
+            <div className="flex gap-6 mb-2 text-xs ">
+              <div className="flex items-center gap-1 ">
+                <FaCircle className="text-green-400" />
+                <span>On Time</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <FaCircle className="text-red-400" />
+                <span>Delayed/Cancelled</span>
+              </div>
+              <div className="flex ml-auto">
+                <button onClick={fetchResults} className="btn btn-sm bg-base-200 hover:bg-base-100">
+                  Reload
+                  <span>{<FaUndo />}</span>
+                </button>
+              </div>
+            </div>
+            <div className="overflow-x-auto w-full mx-auto border rounded-box border-base-content/5 bg-base-300">
+              <table className="table table-xs table-pin-rows table-pin-cols">
+                <thead>
+                  <tr className="text-center text-sm">
+                    <td className="w-12">Line</td>
+                    <td className="min-w-32">Destination</td>
+                    <td className="w-16">Departs</td>
+                    <td className="w-16">In</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stations.slice(0, 10).map((station) => (
+                    <TimetableItem key={station.key + station.countdown} station={station} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         ) : (
           <div className="w-2/3 items-center m-auto">
@@ -158,13 +177,13 @@ function DeparturesList() {
               onClick={() => {
                 addFavorite(cityName, stationName);
               }}
-              className="btn btn-sm"
+              className="btn btn-sm bg-base-200 hover:bg-base-100"
             >
               Save station
             </button>
           )}
           <button
-            className="btn btn-sm ml-auto"
+            className="btn btn-sm ml-auto bg-base-200 hover:bg-base-100"
             onClick={() =>
               (document.getElementById('departures_modal') as HTMLDialogElement)?.showModal()
             }
